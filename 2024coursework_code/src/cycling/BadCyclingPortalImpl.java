@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+<<<<<<< HEAD
 hello Amy I am very clever
 
 
@@ -22,10 +23,11 @@ hello Amy I am very clever
 
 
 	
+=======
+>>>>>>> e10f2415575c7491956c6eabe20a5b4c9dd8ea57
 /**
  * BadCyclingPortal is a minimally compiling, but non-functioning implementor
  * of the CyclingPortal interface.
- * hello there 
  * @author Diogo Pacheco
  * @version 2.0
  *
