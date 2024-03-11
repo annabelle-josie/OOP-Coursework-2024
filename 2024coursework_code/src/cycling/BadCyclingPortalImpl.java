@@ -3,8 +3,6 @@ package cycling;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-
-// hello Amy I am very clever
 	
 /**
  * BadCyclingPortal is a minimally compiling, but non-functioning implementor
