@@ -5,8 +5,8 @@ public class Races {
 	private int raceID ;
 	private String name;
 	private String description;
-	private Double length;
-	//private stages[] stages ;
+	private Double length; // have to get it from the stage and add them all up
+	//private stages[] stages ; add add stages from stage class ??
 	ArrayList<Integer> raceIDList = new ArrayList<Integer>();
 	// constructor
 	public Races(String name, String description) {
@@ -18,13 +18,12 @@ public class Races {
 	}
 	
 		
-	
 	public int createRaceID() {
 		// if race list is empty race ID = 0001
 		if (raceIDList.isEmpty()) {
 			raceID = 1;
 		} else {
-			raceID = (raceIDList.get(raceIDList.size()-1) +1);
+			raceID = (raceIDList.get(raceIDList.size()-1) +1); // gets the last used arraya nd adds 1 to it
 		}
 		// add an array to list
 		raceIDList.add(raceID);
@@ -52,16 +51,8 @@ public class Races {
 		return raceID;
 	}
 
-	public int getRaceStages(int raceID) {
-		return raceID;
-	} 
-
 // using get race IDs list
 // cycle list check if it exists 
-
-
-// add stages
-// using race ID 
 
     
 // public getters and setters for private instance
@@ -85,15 +76,17 @@ public class Races {
     	}
 
 
-	//public void setlength() {
+	//public void setlength() { // will get the length from each stage and add them up hopefully
 	//	Double length = 0.0d;
 	//	for(stages stageid : stages);
-	//		length += stages.getlength();
+	//		length += stages.getlength(); // how to get the length from the stages 
 	//	this.length = length;
 	//}
 
 	public void addStages(stages stages[]) {
-		//stages.add(stages);
+		//stages.add(stages); 
+		// what format do we need to as them in 
+		// want to be able to do as a list and single add trough stage ID??
         	this.stages = stages;
     	}
 
