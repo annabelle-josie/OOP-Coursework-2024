@@ -55,4 +55,17 @@ public class Rider{
     public int getYearOfBirth(){
         return yearOfBirth;
     }
+
+    /**
+     * Made to quickly return rider details. Used in debugging
+     * @return A String containing all the details of that rider
+     */
+    @Override
+    public String toString(){
+        String out = "";
+        out = String.valueOf(this.getRiderID()) + ": ";
+        out = out + this.getName() + ", ";
+        out = out + this.getYearOfBirth() + " ";
+        return out;
+    }
 }
