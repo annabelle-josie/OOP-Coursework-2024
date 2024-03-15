@@ -3,6 +3,7 @@ import cycling.IllegalNameException;
 import cycling.InvalidNameException;
 import cycling.MiniCyclingPortal;
 import cycling.Rider;
+import cycling.Team;
 
 /**
  * A short program to illustrate an app testing some minimal functionality of a
@@ -29,14 +30,6 @@ public class CyclingPortalTestApp {
 		 * fillDetails
 		 * The ID setting done by the constructor. IDs cannot be reused, that was intentional, but is that what we want?
 		 
-		Rider firstRider = new Rider();
-		System.out.println(firstRider.getRiderID());
-		Rider secondRider = new Rider();
-		System.out.println(secondRider.getRiderID());
-		firstRider.fillDetails("Alice", 2005);
-		secondRider.fillDetails("Bob", 1990);
-		System.out.println(firstRider);
-		System.out.println(secondRider);
 
 		Rider riderList[] = new Rider[50];
 		for (int i = 0; i < 50; i++) {
@@ -50,9 +43,23 @@ public class CyclingPortalTestApp {
 		}
 		*/
 		/*
-		 * TODO:Annabelle's testing of Team.java
-		 * 
-		 */
+		 * Annabelle's testing of Team.java
+		Team teamA = new Team();
+		Team teamB = new Team();
+		Team teamC = new Team();
+		teamA.fillDetails("First Team", "The first team");
+		System.out.println(teamA.getName());
+		teamB.addRider(riderList[10]);
+		teamB.addRider(riderList[1]);
+		teamB.addRider(riderList[15]);
+		int[] riders_in_B = teamB.getRiderIDList();
+		for (int riders : riders_in_B) {
+			System.out.println(riders);
+		}
+		//Ok, so this works... but I think you need to be able to add from IDs
+		//I'm going to branch and try and fix it.
+		*/
+
 
 
 		// TODO replace BadMiniCyclingPortalImpl by CyclingPortalImpl

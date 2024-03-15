@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class Team{
     private int teamID;
-    private int nextID;
+    private static int nextID;
     private ArrayList<Rider> riders = new ArrayList<Rider>();
     private String name, description;
 
@@ -64,7 +64,7 @@ public class Team{
      * <p>
      * Currently Rider is inputted, this should be changed to ID when brain works
      * <p>
-     * TODO: Change to accept these
+     * TODO: Change to accept these two:
      * @param riderID                       The ID of the rider to be added
      * @throws IDNotRecognisedException     If a rider with that ID does not exist
      */
@@ -78,13 +78,14 @@ public class Team{
      * <p>
      * This will simplify if addRider() is changed
      * TODO: Test and debate changing to arraylist of integers (RiderIDs) 
-     * @return Array of RiderIDs
+     * @return Integer array of RiderIDs
      */
     public int[] getRiderIDList(){
         int[] riderIDs = new int[riders.size()];
         int count = 0;
         for (Rider rider : riders) {
             riderIDs[count] = rider.getRiderID();
+            count++;
         }
         return riderIDs;
     }
