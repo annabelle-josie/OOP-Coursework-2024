@@ -1,4 +1,6 @@
 package cycling;
+import java.util.ArrayList;
+
 
 /**
  * Rider Class
@@ -13,6 +15,7 @@ public class Rider{
     private int riderID, yearOfBirth;
     private static int nextID; //Static as independent of instances
     private String name;
+    private static ArrayList<Integer> currentRiders = new ArrayList<Integer>();
     //TODO: Some way of counting their point totals
 
     /**
@@ -23,6 +26,7 @@ public class Rider{
         //ID will incriment each time. If a rider is deleted then there will just be a gap in the numbers
         this.riderID = nextID;
         nextID++;
+        currentRiders.add(riderID);
     }
 
     /**
@@ -40,6 +44,12 @@ public class Rider{
      */
     public int getRiderID(){
         return riderID;
+    }
+
+    public static void isRider(int riderID) throws IDNotRecognisedException{
+        if (!currentRiders.contains(riderID)){
+            throw new IDNotRecognisedException();
+        }
     }
 
     /**
