@@ -1,4 +1,5 @@
 import cycling.BadMiniCyclingPortalImpl;
+import cycling.IDNotRecognisedException;
 import cycling.IllegalNameException;
 import cycling.InvalidNameException;
 import cycling.MiniCyclingPortal;
@@ -29,7 +30,7 @@ public class CyclingPortalTestApp {
 		 * All getters and setters
 		 * fillDetails
 		 * The ID setting done by the constructor. IDs cannot be reused, that was intentional, but is that what we want?
-		 
+		 */
 
 		Rider riderList[] = new Rider[50];
 		for (int i = 0; i < 50; i++) {
@@ -41,26 +42,30 @@ public class CyclingPortalTestApp {
 		for (int i = 0; i < 50; i++) {
 			System.out.println(riderList[i].getRiderID());
 		}
-		*/
+		
 		/*
-		 * Annabelle's testing of Team.java
+		 * Annabelle's testing of Team.java */
 		Team teamA = new Team();
 		Team teamB = new Team();
 		Team teamC = new Team();
 		teamA.fillDetails("First Team", "The first team");
 		System.out.println(teamA.getName());
-		teamB.addRider(riderList[10]);
-		teamB.addRider(riderList[1]);
-		teamB.addRider(riderList[15]);
-		int[] riders_in_B = teamB.getRiderIDList();
-		for (int riders : riders_in_B) {
-			System.out.println(riders);
+		try {
+			teamB.addRider(riderList[10].getRiderID());
+			teamB.addRider(riderList[1].getRiderID());
+			teamB.addRider(riderList[15].getRiderID());
+		} catch (IDNotRecognisedException e) {
+			System.out.println("Error thrown");
 		}
+		try {
+			teamB.addRider(67);
+		} catch (IDNotRecognisedException e) {
+			System.out.println("Error thrown");
+		}
+		System.out.println(teamB.getRiderIDList());
 		//Ok, so this works... but I think you need to be able to add from IDs
 		//I'm going to branch and try and fix it.
-		*/
-
-
+		
 
 		// TODO replace BadMiniCyclingPortalImpl by CyclingPortalImpl
 		MiniCyclingPortal portal1 = new BadMiniCyclingPortalImpl();

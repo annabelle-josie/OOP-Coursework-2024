@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class Team{
     private int teamID;
     private static int nextID;
-    private ArrayList<Rider> riders = new ArrayList<Rider>();
+    private ArrayList<Integer> riders = new ArrayList<>();
     private String name, description;
 
     /**
@@ -59,34 +59,22 @@ public class Team{
     /**
      * Adds a rider to the team
      * <p>
-     * There is a very real chance this doesn't work
-     * TODO: Test and debate changing to arraylist of integers (RiderIDs)
-     * <p>
-     * Currently Rider is inputted, this should be changed to ID when brain works
-     * <p>
-     * TODO: Change to accept these two:
-     * @param riderID                       The ID of the rider to be added
+     * Takes RiderID, checks if that rider exists throws error if not.
+     * Adds RiderID to the ArrayList of Riders in that team
+     * @param riderID                       Integer ID of the rider to be added
      * @throws IDNotRecognisedException     If a rider with that ID does not exist
      */
-    public void addRider(Rider newRider){
+    public void addRider(int riderID) throws IDNotRecognisedException{
         //riderID
-        riders.add(newRider);
+        Rider.isRider(riderID);
+        riders.add(riderID);
     }
     
     /**
-     * Returns a list the Riders IDs
-     * <p>
-     * This will simplify if addRider() is changed
-     * TODO: Test and debate changing to arraylist of integers (RiderIDs) 
-     * @return Integer array of RiderIDs
+     * Returns the RiderIDs of Riders in the given team
+     * @return ArrayList of Integers of RiderIDs
      */
-    public int[] getRiderIDList(){
-        int[] riderIDs = new int[riders.size()];
-        int count = 0;
-        for (Rider rider : riders) {
-            riderIDs[count] = rider.getRiderID();
-            count++;
-        }
-        return riderIDs;
+    public ArrayList<Integer> getRiderIDList(){
+        return riders;
     }
 }
