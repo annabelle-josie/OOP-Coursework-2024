@@ -3,6 +3,7 @@ package cycling;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 	
 /**
  * BadCyclingPortal is a minimally compiling, but non-functioning implementor
@@ -12,62 +13,207 @@ import java.time.LocalTime;
  *
  */
 public class CyclingPortalImpl implements CyclingPortal {
+	ArrayList<Races> listOfRaces = new ArrayList<Races>();
+	ArrayList<Stages> listOfStages = new ArrayList<Stages>();
 
+	/**
+	 * Returns arrray of RaceIDs that are currently in use
+	 * @return Integer Array of the RaceIDs
+	 */
 	@Override
 	public int[] getRaceIds() {
-		// TODO Auto-generated method stub
-		return new int[] {};
+		int[] raceIdlist = new int[listOfRaces.size()];
+		int count = 0;
+		for (Races race : listOfRaces) {
+			raceIdlist[count] = race.getRaceID();
+			count++;
+		}
+
+		for (int id : raceIdlist) {
+			System.out.println(id);
+		}
+
+		return raceIdlist;
 	}
 
+	/**
+	 * Creates a new race with given paramenters
+	 * @param name						The name of the Race
+	 * @param description				The description of the Race
+	 * @return raceID of the new Race
+	 * @throws IllegalNameException 	If the name is already in use in the system
+	 * @throws InvalidNameException		If the name is in an invalid format: either null, empty, too large or containing whitespace
+	 */
 	@Override
 	public int createRace(String name, String description) throws IllegalNameException, InvalidNameException {
-		// TODO Auto-generated method stub
-		return 0;
+		//TODO: add character limit check
+		if(name == "" || name == null || name.contains(" ")){
+			throw new InvalidNameException();
+		}
+		for (Races races : listOfRaces) {
+			if (name == races.getName())
+				throw new IllegalNameException();
+			}	
+
+		listOfRaces.add(new Races(name, description));
+		int raceID = listOfRaces.get(listOfRaces.size() -1).getRaceID();
+
+		return raceID;
 	}
 
+	/**
+	 * Returns a String of all race details
+	 * @return String of race details in formatt: raceID, name, description, length
+	 */
 	@Override
 	public String viewRaceDetails(int raceId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return null;
+		String s = "hi";
+		for (Races races : listOfRaces) {
+			System.out.println(races.getRaceID());
+			if (raceId == races.getRaceID()){
+				s = races.raceasstring();
+				return s;
+			}
+		}		
+		throw new IDNotRecognisedException();
 	}
 
+	/**
+	 * Removes race from active race list
+	 * @param raceID 						The integer ID of the race to be removed
+	 * @throws IDNotRecognisedException		If the ID entered is not in the list of current races
+	 */
 	@Override
 	public void removeRaceById(int raceId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-
+		Boolean found = false;
+		int count = 0;
+		while (!found && count < listOfRaces.size()){
+			if (raceId == listOfRaces.get(count).getRaceID()){
+				listOfRaces.remove(listOfRaces.get(count));
+				found = true;
+			}
+			count++;	
+		}
+		if(!found){
+			throw new IDNotRecognisedException();
+		}
 	}
 
+
+	/**
+	 * Returns the number of stages in a given race
+	 * @param raceId	the ID of the race whose stages are being checked
+	 * @return Number of stages in race
+	 */
 	@Override
 	public int getNumberOfStages(int raceId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return 0;
+		int count = 0;
+		boolean found = false;
+		for (Stages stage : listOfStages) {
+			if (raceId == stage.getRaceID())
+				count += 1;
+				found =true;
+		}
+		if (!found) {
+			throw new IDNotRecognisedException();
+		}
+		return count;
 	}
 
+	/**
+	 * Create a new stage and add it to the race
+	 * @param raceId						The integer ID of the race to be added to
+	 * @param stageName						The name of the stage
+	 * @param description					The stage description
+	 * @param length						The length of the stage
+	 * @param startTime						The start time of the stage
+	 * @return StageID of the new stage created
+	 * @throws IDNotRecognisedException		If the raceId provided does not match an active race
+	 * @throws IllegalNameException			If the name provided already exists as a stage
+	 * @throws InvalidNameException			If the name is in an invalid format: either null, empty, too large or containing whitespace
+	 * @throws InvalidLengthException		If the race length is null or less than 5
+	 */
 	@Override
 	public int addStageToRace(int raceId, String stageName, String description, double length, LocalDateTime startTime,
 			StageType type)
 			throws IDNotRecognisedException, IllegalNameException, InvalidNameException, InvalidLengthException {
-		// TODO Auto-generated method stub
-		return 0;
+				Boolean found = false;
+				for (Races race : listOfRaces) {
+					if(race.getRaceID() == raceId){
+						found = true;
+					}
+				}
+				if(found == false){
+					throw new IDNotRecognisedException();
+				}
+
+				if(stageName == "" || stageName == null || stageName.contains(" ")){
+					throw new InvalidNameException();
+				}
+				for (Stages stage : listOfStages) {
+					if (stageName == stage.getstageName())
+						throw new IllegalNameException();
+					}	
+				//TODO: Add a check to see if length is null (can a double be null?)
+				if(length < 5 ){
+					throw new InvalidLengthException();
+				}
+
+				listOfStages.add(new Stages(raceId,stageName, description,length, startTime,type));
+				int stageID = listOfStages.get(listOfStages.size() -1).getStageID();
+				for (Races race : listOfRaces) {
+					if (raceId == race.getRaceID())
+						race.setStages(stageID);
+						race.setLength(length);
+				}		
+		return stageID;
 	}
 
+	/**
+	 * Returns an array of the IDs of the race stages
+	 * @param raceId	The ID of the race whose stages are being selected
+	 * @return Integer Array of race stage IDs
+	 */
 	@Override
 	public int[] getRaceStages(int raceId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return null;
+		for (Races races : listOfRaces) {
+			if (raceId == races.getRaceID()){
+				return races.getStages();
+			}
+		}	
+		throw new IDNotRecognisedException();
 	}
 
 	@Override
 	public double getStageLength(int stageId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return 0;
+		double length = 0.0d;
+		for (Stages stage : listOfStages) {
+			if (stageId == stage.getStageID()){
+				length = stage.getlength();
+				return length;
+			}
+		}
+		throw new IDNotRecognisedException();
 	}
 
 	@Override
 	public void removeStageById(int stageId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-
+		int raceId;
+		Boolean found = false;
+		int count = 0;
+		while (!found && count < listOfRaces.size()){
+			if (stageId == listOfStages.get(count).getStageID()){
+				listOfStages.remove(listOfStages.get(count));
+				found = true;
+				raceId = listOfStages.get(count).getStageID();
+			}
+			count++;	
+		}
+		if(!found){
+			throw new IDNotRecognisedException();
+		}
 	}
+	
 
 	@Override
 	public int addCategorizedClimbToStage(int stageId, Double location, CheckpointType type, Double averageGradient,
@@ -104,7 +250,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int createTeam(String name, String description) throws IllegalNameException, InvalidNameException {
-		// TODO Auto-generated method stub
+		
 		return 0;
 	}
 

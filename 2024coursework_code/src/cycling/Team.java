@@ -20,20 +20,13 @@ public class Team{
      * <p>
      * Creates new Team with unique ID
      */
-    public Team(){
+    public Team(String name, String description){
         this.teamID = nextID;
         nextID++; 
-    }
-
-    /**
-     * Allows team details to be added to the team
-     * @param name          Name of the Team
-     * @param description   Description of the Team
-     */
-    public void fillDetails(String name, String description){
         this.name = name;
         this.description = description;
     }
+
 
     /**
      * @return Unique ID of the team

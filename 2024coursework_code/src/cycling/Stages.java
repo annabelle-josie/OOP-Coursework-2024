@@ -1,10 +1,12 @@
 package cycling;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
+
 public class Stages {
 	// 4 attributes
 	private int stageID ;
 	private int raceID;
+	private static int nextID;
 	private String stageName;
 	private String description;
 	private double length;
@@ -12,31 +14,22 @@ public class Stages {
 	private StageType type;
 	ArrayList<Integer> checkpointIDs = new ArrayList<Integer>();
 	ArrayList<Integer> stageIDList = new ArrayList<Integer>();
+	private static ArrayList<Integer> currentStages = new ArrayList<Integer>();
 
 	// constructor
 	public Stages(int raceId, String stageName, String description, double length, LocalDateTime startTime, StageType type) {
 	
-		this.stageID = createStageID();
+		this.stageID = nextID;
+        nextID++;
+        currentStages.add(stageID);
 		this.raceID = raceId;
-        	this.stageName = stageName;
-        	this.description = description;
+		this.stageName = stageName;
+		this.description = description;
 		this.length = length;
 		this.StartTime = startTime;
 		this.type = type;
 	}
 
-	
-	public int createStageID() {
-		// if stage list is empty stage ID = 0001
-		if (stageIDList.isEmpty()) {
-			stageID = 1;
-		} else {
-			stageID = (stageIDList.get(stageIDList.size()-1) +1);
-		}
-		// add an array to list
-		stageIDList.add(stageID);
-		return stageID;
-	}
 	
 // same with adding stages to races other option just use IDS dont reference the class 
 	public void addCheckpoint(int checkpointID) {
@@ -57,7 +50,7 @@ public class Stages {
 	}
 	public String getdescription() {
 		return description;
-	}
+	} 
 	public Double getlength() {
 		return length;
 	}
@@ -66,6 +59,10 @@ public class Stages {
 	}
 	public StageType getType() {
 		return type;
+	}
+
+	public String stageasstring(){
+        return ("stages of raceId" + raceID + " " + stageID + " "+ stageName + " " + description + " " + length + " " + StartTime + " " + type);
 	}
 
 

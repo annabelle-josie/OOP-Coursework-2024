@@ -1,19 +1,30 @@
 package cycling;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class Races {
 	// 4 attributes
 	private int raceID ;
+	private static int nextID;
 	private String name;
 	private String description;
 	//private stages[] stages;
 	int[] stages ;
 	private Double length;
+	private static ArrayList<Integer> currentRaces = new ArrayList<Integer>();
 
 
-	// constructor
-
-	public Races(int raceId, String name, String description) {
-		this.raceID = raceId;
+	/**
+	 * Creates new race with unique ID
+	 * @param name
+	 * @param description
+	 */
+	public Races(String name, String description) {
+		// throw new throws IllegalNameException, InvalidNameException
+		this.raceID = nextID;
+        nextID++;
+        currentRaces.add(raceID);
         this.name = name;
 		this.description = description;
 		this.stages = null ;
@@ -62,4 +73,13 @@ public class Races {
     	}
 
 	public Double getLength() {return length;}
+	public String raceasstring(){
+		String s;
+		if(stages == null){
+			s = ("races of ID " + raceID + " " + " "+ name + " " + description + " " +length);
+		} else {
+			s = ("races of ID " + raceID + " " + " "+ name + " " + description +" "+ Arrays.toString(stages) + " " +length);
+		}
+        return s;
+	}
 }
