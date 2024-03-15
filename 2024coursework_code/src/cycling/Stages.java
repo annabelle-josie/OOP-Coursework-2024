@@ -1,7 +1,7 @@
 package cycling;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
-public class stages {
+public class Stages {
 	// 4 attributes
 	private int stageID ;
 	private int raceID;
@@ -14,7 +14,7 @@ public class stages {
 	ArrayList<Integer> stageIDList = new ArrayList<Integer>();
 
 	// constructor
-	public stages(int raceId, String stageName, String description, double length, LocalDateTime startTime, StageType type) {
+	public Stages(int raceId, String stageName, String description, double length, LocalDateTime startTime, StageType type) {
 	
 		this.stageID = createStageID();
 		this.raceID = raceId;
