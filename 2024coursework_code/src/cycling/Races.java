@@ -1,3 +1,4 @@
+package cycling;
 import java.util.ArrayList;
 // need to add total length
 public class Races {
@@ -11,8 +12,8 @@ public class Races {
 	// constructor
 	public Races(String name, String description) {
 		this.raceID = createRaceID();
-        	this.name = name;
-        	this.description = description;
+        this.name = name;
+        this.description = description;
 		this.stages = null ;
 		this.length = 0.0d;
 	}
