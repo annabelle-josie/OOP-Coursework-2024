@@ -78,4 +78,6 @@ public class Rider{
         out = out + this.getYearOfBirth() + " ";
         return out;
     }
+
+    //TODO:Add delete rider to remove from list
 }
