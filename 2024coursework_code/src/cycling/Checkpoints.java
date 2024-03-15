@@ -1,5 +1,6 @@
+package cycling;
 import java.util.ArrayList;
-public class checkpoints {
+public class Checkpoints {
 	// 4 attributes
 	private int checkpointID;
 	private int stageID ;
@@ -9,7 +10,7 @@ public class checkpoints {
 	private Double length;
 	ArrayList<Integer> checkpointIDList = new ArrayList<Integer>();
 	// constructor
-	public checkpoints(int stageId, Double location, CheckpointType type, Double averageGradient,Double length) {
+	public Checkpoints(int stageId, Double location, CheckpointType type, Double averageGradient,Double length) {
 		this.stageID = stageId;
         	this.location = location;
         	this.type = type;

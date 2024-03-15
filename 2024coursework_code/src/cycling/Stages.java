@@ -1,4 +1,4 @@
-package cycling
+package cycling;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 public class stages {
