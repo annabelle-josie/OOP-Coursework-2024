@@ -13,13 +13,36 @@ public class Checkpoints {
 	// constructor
 	public Checkpoints(int stageId, Double location, CheckpointType type, Double averageGradient,Double length) {
 		this.checkpointID = nextID;
-        nextID++;
-        currentCheckpoints.add(checkpointID);
+        	nextID++;
+        	currentCheckpoints.add(checkpointID);
 		this.stageID = stageId;
-        this.location = location;
-        this.type = type;
+        	this.location = location;
+        	this.type = type;
 		this.averageGradient = averageGradient;
 		this.length = 0.0d;
+	}
+	public Checkpoints(int stageId, Double location) {
+		this.checkpointID = nextID;
+        	nextID++;
+        	currentCheckpoints.add(checkpointID);
+		this.stageID = stageId;
+        	this.location = location;
+		this.length = 0.0d;
+	}
+	public int getCheckpointID() {
+		return checkpointID;
+	} 
+	public int getStageID() {
+		return stageID;
+	}
+	public CheckpointType getType() {
+		return type;
+	}
+	public Double getAverageGradient() {
+		return averageGradient ;
+	}
+	public Double getLength() {
+		return length;
 	}
 
 
