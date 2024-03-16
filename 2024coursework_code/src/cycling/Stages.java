@@ -13,15 +13,16 @@ public class Stages {
 	LocalDateTime StartTime;
 	private StageType type;
 	private String stageState;
-	ArrayList<Integer> checkpointIDs = new ArrayList<Integer>();
+	int[] checkpoints;
 	ArrayList<Integer> stageIDList = new ArrayList<Integer>();
 	private static ArrayList<Integer> currentStages = new ArrayList<Integer>();
 
 	// constructor
 	public Stages(int raceId, String stageName, String description, double length, LocalDateTime startTime, StageType type) {
+	
 		this.stageID = nextID;
-        	nextID++;
-        	currentStages.add(stageID);
+        nextID++;
+        currentStages.add(stageID);
 		this.raceID = raceId;
 		this.stageName = stageName;
 		this.description = description;
@@ -29,22 +30,33 @@ public class Stages {
 		this.StartTime = startTime;
 		this.type = type;
 		this.stageState = null;
+		this.checkpoints = null;
 	}
 
 	
 // same with adding stages to races other option just use IDS dont reference the class 
 	public void addCheckpoint(int checkpointID) {
-		checkpointIDs.add(checkpointID);
-	
+		if (checkpoints== null){
+			this.checkpoints = new int[]{checkpointID};
+		} else {
+			int length = checkpoints.length;
+			int[] newArray = new int[length + 1];
+			int i;
+			for (i = 0; i < length; i++)
+				newArray[i] = checkpoints[i];
+			newArray[length] = checkpointID;
+			this.checkpoints = newArray;
+		}
 // the getters
 
 	}
 	public void setStageState(){
-		this.stageStage = "waiting for results";
+		this.stageState = "waiting for results";
 	}
 	public String getStageState(){
 		return stageState;
 	}
+	
 	
 	public int getRaceID() {
 		return raceID;
@@ -66,6 +78,9 @@ public class Stages {
 	}
 	public StageType getType() {
 		return type;
+	}
+	public int[] getCheckpoints(){
+		return checkpoints;
 	}
 
 	public String stageasstring(){
