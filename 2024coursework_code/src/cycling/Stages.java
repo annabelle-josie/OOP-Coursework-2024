@@ -12,22 +12,23 @@ public class Stages {
 	private double length;
 	LocalDateTime StartTime;
 	private StageType type;
+	private String stageState;
 	ArrayList<Integer> checkpointIDs = new ArrayList<Integer>();
 	ArrayList<Integer> stageIDList = new ArrayList<Integer>();
 	private static ArrayList<Integer> currentStages = new ArrayList<Integer>();
 
 	// constructor
 	public Stages(int raceId, String stageName, String description, double length, LocalDateTime startTime, StageType type) {
-	
 		this.stageID = nextID;
-        nextID++;
-        currentStages.add(stageID);
+        	nextID++;
+        	currentStages.add(stageID);
 		this.raceID = raceId;
 		this.stageName = stageName;
 		this.description = description;
 		this.length = length;
 		this.StartTime = startTime;
 		this.type = type;
+		this.stageState = null;
 	}
 
 	
@@ -37,6 +38,12 @@ public class Stages {
 	
 // the getters
 
+	}
+	public void setStageState(){
+		this.stageStage = "waiting for results";
+	}
+	public String getStageState(){
+		return stageState;
 	}
 	
 	public int getRaceID() {
