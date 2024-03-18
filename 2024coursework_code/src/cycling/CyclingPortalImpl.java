@@ -15,6 +15,8 @@ import java.util.ArrayList;
 public class CyclingPortalImpl implements CyclingPortal {
 	ArrayList<Races> listOfRaces = new ArrayList<Races>();
 	ArrayList<Stages> listOfStages = new ArrayList<Stages>();
+	ArrayList<Teams> listOfTeams = new ArrayList<Teams>();
+	ArrayList<Riders> listOfRiders = new ArrayList<Riders>();
 
 	/**
 	 * Returns arrray of RaceIDs that are currently in use
@@ -198,16 +200,23 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public void removeStageById(int stageId) throws IDNotRecognisedException {
-		int raceId;
 		Boolean found = false;
 		int count = 0;
-		while (!found && count < listOfRaces.size()){
+
+		for (Races races : listOfRaces) {
+			for(int stages : races.getStages()){
+				if (stages == stageId){
+					races.removeStage(stageId);
+				}
+			}
+		}
+		while (!found && count < listOfStages.size()){
 			if (stageId == listOfStages.get(count).getStageID()){
+				
 				listOfStages.remove(listOfStages.get(count));
 				found = true;
-				raceId = listOfStages.get(count).getStageID();
 			}
-			count++;	
+			count++;
 		}
 		if(!found){
 			throw new IDNotRecognisedException();
@@ -250,39 +259,112 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int createTeam(String name, String description) throws IllegalNameException, InvalidNameException {
+		if(name == "" || name == null || name.contains(" ")){
+			throw new InvalidNameException();
+		}
+		for (Teams teams : listOfTeams) {
+			if (name == teams.getName())
+				throw new IllegalNameException();
+		}	
 		
-		return 0;
+		listOfTeams.add(new Teams(name, description));
+		
+		return listOfTeams.get(listOfTeams.size()-1).getTeamID();
 	}
 
 	@Override
 	public void removeTeam(int teamId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-
+		Boolean found = false;
+		int count = 0;
+		while (!found && count < listOfTeams.size()){
+			System.out.println("count = " + count);
+			if (teamId == listOfTeams.get(count).getTeamID()){
+				listOfTeams.remove(listOfTeams.get(count));
+				found = true;
+			}
+			count++;	
+		}
+		if(!found){
+			throw new IDNotRecognisedException();
+		}
+				
 	}
 
 	@Override
 	public int[] getTeams() {
-		// TODO Auto-generated method stub
-		return null;
+		int[] teamIdlist = new int[listOfTeams.size()];
+		int count = 0;
+		for (Teams teams : listOfTeams) {
+			teamIdlist[count] = teams.getTeamID();
+			count++;
+		}
+
+		for (int id : teamIdlist) {
+			System.out.println(id);
+		}
+
+		return teamIdlist;
 	}
 
 	@Override
 	public int[] getTeamRiders(int teamId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return null;
+		for (Teams teams : listOfTeams) {
+			if (teamId == teams.getTeamID()){
+				return teams.getRiders();
+			}
+		}	
+		throw new IDNotRecognisedException();
 	}
 
 	@Override
 	public int createRider(int teamID, String name, int yearOfBirth)
 			throws IDNotRecognisedException, IllegalArgumentException {
-		// TODO Auto-generated method stub
-		return 0;
+				if(name == "" || name == null || yearOfBirth < 1900){
+					throw new IllegalArgumentException();
+				}
+				
+				listOfRiders.add(new Riders(name, yearOfBirth));
+				int riderID = listOfRiders.get(listOfRiders.size()-1).getRiderID();
+				
+				Boolean found = false;
+				for (Teams team : listOfTeams) {
+					if(teamID == team.getTeamID()){
+						team.addRider(riderID);
+						found = true;
+					}
+				}
+				if (found == false){
+					throw new IDNotRecognisedException();
+				}
+				return riderID;
 	}
 
 	@Override
 	public void removeRider(int riderId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-
+		//Remove from team and from list
+		
+		//Remove from team
+		for (Teams teams : listOfTeams) {
+			for(int riders : teams.getRiders()){
+				if (riders == riderId){
+					teams.removeRider(riderId);
+				}
+			}
+		}
+		//Remove from list of Riders
+		Boolean found = false;
+		int count = 0;
+		while (!found && count < listOfRiders.size()){
+			if (riderId == listOfRiders.get(count).getRiderID()){
+				
+				listOfRiders.remove(listOfRiders.get(count));
+				found = true;
+			}
+			count++;
+		}
+		if(!found){
+			throw new IDNotRecognisedException();
+		}
 	}
 
 	@Override
@@ -355,7 +437,18 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public void removeRaceByName(String name) throws NameNotRecognisedException {
-		// TODO Auto-generated method stub
+		Boolean found = false;
+		int count = 0;
+		while (!found && count < listOfRaces.size()){
+			if (name == listOfRaces.get(count).getName()){
+				listOfRaces.remove(listOfRaces.get(count));
+				found = true;
+			}
+			count++;	
+		}
+		if(!found){
+			throw new NameNotRecognisedException();
+		}
 
 	}
 

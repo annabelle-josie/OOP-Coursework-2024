@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Also an ArrayList containing the riders who are part of the team
  */
 
-public class Team{
+public class Teams{
     private int teamID;
     private static int nextID;
     private ArrayList<Integer> riders = new ArrayList<>();
@@ -20,7 +20,7 @@ public class Team{
      * <p>
      * Creates new Team with unique ID
      */
-    public Team(String name, String description){
+    public Teams(String name, String description){
         this.teamID = nextID;
         nextID++; 
         this.name = name;
@@ -57,9 +57,7 @@ public class Team{
      * @param riderID                       Integer ID of the rider to be added
      * @throws IDNotRecognisedException     If a rider with that ID does not exist
      */
-    public void addRider(int riderID) throws IDNotRecognisedException{
-        //riderID
-        Rider.isRider(riderID);
+    public void addRider(int riderID){
         riders.add(riderID);
     }
     
@@ -67,7 +65,20 @@ public class Team{
      * Returns the RiderIDs of Riders in the given team
      * @return ArrayList of Integers of RiderIDs
      */
-    public ArrayList<Integer> getRiderIDList(){
-        return riders;
+    public void removeRider(int riderID ) throws IDNotRecognisedException {
+		Boolean worked = riders.remove((Integer)riderID);
+		if (!worked){
+			throw new IDNotRecognisedException();
+		}
+    }
+
+    public int[] getRiders(){
+        int[] riderIDArray = new int[riders.size()];
+        int count=0;
+        for (int rider : riders) {
+            riderIDArray[count] = rider;
+            count++;
+        }
+        return riderIDArray;
     }
 }

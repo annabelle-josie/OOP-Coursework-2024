@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * Just getters and setters (basically)
  */
 
-public class Rider{
+public class Riders{
     //TODO: Is it best programming practice to declare as a group or individually?
     private int riderID, yearOfBirth;
     private static int nextID; //Static as independent of instances
@@ -22,19 +22,11 @@ public class Rider{
      * Constructor class for rider
      * Creates new Rider with unique ID
      */
-    public Rider(){
+    public Riders(String name, int yearOfBirth){
         //ID will incriment each time. If a rider is deleted then there will just be a gap in the numbers
         this.riderID = nextID;
         nextID++;
         currentRiders.add(riderID);
-    }
-
-    /**
-     * Allows Riders's details to be added to the Rider
-     * @param name          The name of the rider
-     * @param yearOfBirth   The birth year of the rider
-     */
-    public void fillDetails(String name, int yearOfBirth){
         this.name = name;
         this.yearOfBirth = yearOfBirth;
     }

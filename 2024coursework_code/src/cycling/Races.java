@@ -2,6 +2,7 @@ package cycling;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class Races {
 	// 4 attributes
@@ -10,7 +11,7 @@ public class Races {
 	private String name;
 	private String description;
 	//private stages[] stages;
-	int[] stages ;
+	private ArrayList<Integer> stages = new ArrayList<Integer>();
 	private Double length;
 	private static ArrayList<Integer> currentRaces = new ArrayList<Integer>();
 
@@ -27,7 +28,6 @@ public class Races {
         currentRaces.add(raceID);
         this.name = name;
 		this.description = description;
-		this.stages = null ;
 		this.length = 0.0d;
 	}
 
@@ -35,23 +35,16 @@ public class Races {
 // add stages
 // using race ID 
     public void setStages(int stageId) {
-		if (stages == null){
-			System.out.println("hello there sir");
-			this.stages = new int[]{stageId};
-		} else {
-			System.out.println("hello there");
-			int length = stages.length;
-			int[] newArray = new int[length + 1];
-			int i;
-			for (i = 0; i < length; i++)
-				newArray[i] = stages[i];
-			newArray[length] = stageId;
-			this.stages = newArray;
-		}
+			this.stages.add(stageId);
     }
-	public void replaceStages(int[] stagelist){
-		this.stages = stagelist;
+
+	public void removeStage(int stageId) throws IDNotRecognisedException {
+		Boolean worked = stages.remove((Integer)stageId);
+		if (!worked){
+			throw new IDNotRecognisedException();
+		}
 	}
+
 	public void setLength(double length){
 			this.length += length;
 	}
@@ -69,8 +62,19 @@ public class Races {
 	public String getDescription() { return description; }
 
 	public int[] getStages() {
-        	return stages;
-    	}
+		int[] stagelist = new int[]{};
+		if (stages != null){
+			//int[] stagelist = stages.toArray(new int[stages.size()]);
+			stagelist = new int[stages.size()];
+			int count=0;
+        	for (int stage : stages) {
+            	stagelist[count] = stage;
+            	count++;
+        	}
+		}
+		return stagelist;
+	} 
+		
 
 	public Double getLength() {return length;}
 	public String raceasstring(){
@@ -78,7 +82,7 @@ public class Races {
 		if(stages == null){
 			s = ("races of ID " + raceID + " " + " "+ name + " " + description + " " +length);
 		} else {
-			s = ("races of ID " + raceID + " " + " "+ name + " " + description +" "+ Arrays.toString(stages) + " " +length);
+			s = ("races of ID " + raceID + " " + " "+ name + " " + description +" "+ stages.toString() + " " +length);
 		}
         return s;
 	}
