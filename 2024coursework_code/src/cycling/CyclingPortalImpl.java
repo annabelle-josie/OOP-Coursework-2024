@@ -102,11 +102,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 
 
-	/**
-	 * Returns the number of stages in a given race
-	 * @param raceId	the ID of the race whose stages are being checked
-	 * @return Number of stages in race
-	 */
+
 	@Override
 	public int getNumberOfStages(int raceId) throws IDNotRecognisedException {
 		int count = 0;
@@ -122,19 +118,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 		return count;
 	}
 
-	/**
-	 * Create a new stage and add it to the race
-	 * @param raceId						The integer ID of the race to be added to
-	 * @param stageName						The name of the stage
-	 * @param description					The stage description
-	 * @param length						The length of the stage
-	 * @param startTime						The start time of the stage
-	 * @return StageID of the new stage created
-	 * @throws IDNotRecognisedException		If the raceId provided does not match an active race
-	 * @throws IllegalNameException			If the name provided already exists as a stage
-	 * @throws InvalidNameException			If the name is in an invalid format: either null, empty, too large or containing whitespace
-	 * @throws InvalidLengthException		If the race length is null or less than 5
-	 */
 	@Override
 	public int addStageToRace(int raceId, String stageName, String description, double length, LocalDateTime startTime,
 			StageType type)
@@ -171,11 +154,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 		return stageID;
 	}
 
-	/**
-	 * Returns an array of the IDs of the race stages
-	 * @param raceId	The ID of the race whose stages are being selected
-	 * @return Integer Array of race stage IDs
-	 */
 	@Override
 	public int[] getRaceStages(int raceId) throws IDNotRecognisedException {
 		for (Races races : listOfRaces) {
