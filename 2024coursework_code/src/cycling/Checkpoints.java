@@ -23,10 +23,10 @@ public class Checkpoints {
 	}
 	public Checkpoints(int stageId, Double location) {
 		this.checkpointID = nextID;
-        	nextID++;
-        	currentCheckpoints.add(checkpointID);
+        nextID++;
+        currentCheckpoints.add(checkpointID);
 		this.stageID = stageId;
-        	this.location = location;
+        this.location = location;
 		this.length = 0.0d;
 	}
 	public int getCheckpointID() {
