@@ -80,7 +80,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 		}
 	}
 
-
 	@Override
 	public int getNumberOfStages(int raceId) throws IDNotRecognisedException {
 		int count = 0;
