@@ -44,26 +44,13 @@ public class CyclingPortalTestApp {
 		}
 
 		portal1.getRaceIds();
-// 		try {
-// 			System.out.println(portal1.viewRaceDetails(1));
-// 		} catch (IDNotRecognisedException e) {
-// 			System.out.println("this oneeeee");
-// 		}
-// 		try{
-// 			portal1.removeRaceById(1);
-// 			System.out.println("Removeed success");
-// 		}catch (IDNotRecognisedException e){
-// 			System.out.println("ahhhhh");
-// 		}
-// 		try {
-// 			System.out.println(portal1.viewRaceDetails(1));
-// 		} catch (IDNotRecognisedException e) {
-// 			System.out.println("this oneeeee");
-// 		}
-
-		
 		try {
-			System.out.println("NEW STAGE IS " + portal1.addStageToRace(0,"stage1", "hills",13.1d, LocalDateTime.now() ,StageType.FLAT));
+			System.out.println(portal1.viewRaceDetails(1));
+		} catch (IDNotRecognisedException e) {
+			System.out.println("this oneeeee");
+		}
+		try {
+			System.out.println("NEW STAGE IS " + portal1.addStageToRace(0,"stage1", "hills",13.0d, LocalDateTime.now() ,StageType.FLAT));
 		} catch (IDNotRecognisedException e) {
 			System.out.println("error here");
 		} catch(IllegalNameException e){
@@ -73,11 +60,18 @@ System.out.println("name broke 2");
 		} catch(InvalidLengthException e){
 System.out.println("length broke");
 		}
+		// try{
+		// 	portal1.removeRaceById(0);
+		// 	System.out.println("Removeed success");
+		// }catch (IDNotRecognisedException e){
+		// 	System.out.println("ahhhhh");
+		// }
 		try {
 			System.out.println(portal1.viewRaceDetails(0));
 		} catch (IDNotRecognisedException e) {
 			System.out.println("this oneeeee");
 		}
+		
 		try{
 			int[] stagesInRace = portal1.getRaceStages(0);
 			for (int stage : stagesInRace) {
@@ -86,18 +80,26 @@ System.out.println("length broke");
 		}catch(IDNotRecognisedException e){
 			System.out.println("current");
 		}
+		try {
+			//int stageId, Double location, CheckpointType type, 
+			//Double averageGradient, Double length) throws IDNotRecognisedException, 
+			//InvalidLocationException, InvalidStageStateException, InvalidStageTypeException
+			portal1.addCategorizedClimbToStage(0, 11.d, CheckpointType.C1, 3.2d, 1.5d);
+		} catch (IDNotRecognisedException e) {
+			System.out.println("ID isssues");
+		} catch (InvalidLocationException e){
+			System.out.println("location issues");
+		} catch (InvalidStageStateException e){
+			System.out.println("stage state issues");
+		} catch (InvalidStageTypeException e){
+			System.out.println("stage type issues");
+		}
 
-// 		try{
-// 			portal1.removeStageById(0);
-// 			System.out.println("IT WORKED I PROMISE");
-// 		} catch(IDNotRecognisedException e){
-// 			System.out.println("ID not working :()");
-// 		}
-// 		try {
-// 			System.out.println(portal1.viewRaceDetails(0));
-// 		} catch (IDNotRecognisedException e) {
-// 			System.out.println("this oneeeee");
-// 		}
+		try {
+			System.out.println(portal1.viewRaceDetails(0));
+		} catch (IDNotRecognisedException e) {
+			System.out.println("this oneeeee");
+		}
 
 		try{
 			System.out.println(portal1.getNumberOfStages(0));
@@ -111,35 +113,8 @@ System.out.println("length broke");
 		}
 
 
-		try {
-			//int stageId, Double location, CheckpointType type, 
-			//Double averageGradient, Double length) throws IDNotRecognisedException, 
-			//InvalidLocationException, InvalidStageStateException, InvalidStageTypeException
-			portal1.addCategorizedClimbToStage(0, 11.d, CheckpointType.C1, 1.2d, 1.5d);
-		} catch (IDNotRecognisedException e) {
-			System.out.println("ID isssues");
-		} catch (InvalidLocationException e){
-			System.out.println("location issues");
-		} catch (InvalidStageStateException e){
-			System.out.println("stage state issues");
-		} catch (InvalidStageTypeException e){
-			System.out.println("stage type issues");
-		}
 		
-		try {
-			//int stageId, Double location, CheckpointType type, 
-			//Double averageGradient, Double length) throws IDNotRecognisedException, 
-			//InvalidLocationException, InvalidStageStateException, InvalidStageTypeException
-			portal1.addCategorizedClimbToStage(0, 11.d, CheckpointType.C1, 1.2d, 1.5d);
-		} catch (IDNotRecognisedException e) {
-			System.out.println("ID isssues");
-		} catch (InvalidLocationException e){
-			System.out.println("location issues");
-		} catch (InvalidStageStateException e){
-			System.out.println("stage state issues");
-		} catch (InvalidStageTypeException e){
-			System.out.println("stage type issues");
-		}
+	
 		try{
 		portal1.addIntermediateSprintToStage(0, 11.d);
 	} catch (IDNotRecognisedException e) {
@@ -151,6 +126,13 @@ System.out.println("length broke");
 	} catch (InvalidStageTypeException e){
 		System.out.println("stage type issues");
 	}
+		
+	// try{
+	// 	portal1.removeStageById(0);
+	// 	System.out.println("IT WORKED I PROMISE");
+	// } catch(IDNotRecognisedException e){
+	// 	System.out.println("ID not working :()");
+	// }
 
 	try{
 		System.out.println(Arrays.toString(portal1.getStageCheckpoints(0)));
@@ -160,9 +142,9 @@ System.out.println("length broke");
 	try{
 		portal1.removeCheckpoint(0);
 	} catch(IDNotRecognisedException e){
-		System.out.println("Nope, im broken");
+		System.out.println("invalid ID");
 	}catch(InvalidStageStateException e){
-		System.out.println("Nope, im broken");
+		System.out.println(" Ibalid stage state");
 	}
 
 	try{

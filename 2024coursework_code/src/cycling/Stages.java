@@ -217,6 +217,9 @@ public class Stages {
 		for (Double[] set : listOfTimes) {
 			System.out.print(Arrays.toString(set));
 		}
+
+
+		//Then return this however is most helpful!
 	}
 }
 
