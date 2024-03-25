@@ -644,6 +644,8 @@ public class CyclingPortalImpl implements CyclingPortal {
 	public void loadCyclingPortal(String filename) throws IOException, ClassNotFoundException {
 		// TODO Auto-generated method stub
 
+		//Staic Attributes are not serialisable, so we might need to do something about the ID trackers here!
+
 	}
 
 	@Override

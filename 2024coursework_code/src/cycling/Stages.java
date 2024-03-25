@@ -137,11 +137,78 @@ public class Stages {
 		LocalTime[] riderResults = results.get(riderID);
 		LocalTime end = riderResults[riderResults.length -1];
 		LocalTime start = riderResults[0];
-		long time=  start.until(end, ChronoUnit.MILLIS);
+		long time = start.until(end, ChronoUnit.MILLIS);
 		return time;
 	}
 
 	public static void caculateAdjustment(){ 
+		//TODO: Once this all works, change to the following to read in instead
+		// // for (Integer id : results.keySet()) {a
+  		// // 	listOfTimes.add(realElapsedTime(id) + " " + id);
+		// // }
+		/* 
+		
+		// =====
+		// Get times from results
+		// =====
+		ArrayList<Double> riderTimes = new ArrayList<>(); //Array that can be sorted
+		HashMap<Double, Double> timeRiderDict = new HashMap(); //Dictionary matching times to IDs
+		for (Integer id : results.keySet()) {
+  		 	riderTimes.add(realElapsedTime(id)); //TODO: Might cause an error as realElapsedTime() returns long?
+			timeRiderDict.put(realElapsedTime(id), id);
+		}
+
+		// =====
+		// Sort and rejoin the IDs to the times
+		// =====
+		Collections.sort(riderTimes);
+
+		ArrayList<Double[]> listOfTimes = new ArrayList<>(); //Finished array containing a 2D array
+		//In form [ [time, id], [time, id]]
+		for (int i = 0; i < 7; i++) {
+			Double[] temp = new Double[]{riderTimes.get(i), timeRiderDict.get(riderTimes.get(i))};
+			listOfTimes.add(temp);
+		}
+
+		// =====
+		//Group times into peletons
+		// =====
+		ArrayList<Integer> groupList = new ArrayList<>(); //Assigns the times into peletons if necessary
+		//In form: {1,1,1,0,0,4,4} where non-zero indicate being members of the specified group
+
+		int groupCount = 1; //Tracks which group the times are currently part of
+		for (int i = 0; i < listOfTimes.size()-1; i++) {
+			Double time1 = listOfTimes.get(i+1)[0]; //Next time in list
+			Double time2 = listOfTimes.get(i)[0]; //This time in list
+			if((time1 - time2) < 1){ //Difference between is less than one
+				groupList.add(groupCount);
+			} else{
+				groupList.add(0);
+				groupCount++;;
+			}
+		}
+
+		// =====
+		// Reassign all times of memebers of a peleton to the leader's time
+		// =====
+		int currentGroupLead = 0;
+		Double groupTime = 0.0d;
+		int count = 0;
+		for (int group : groupList) {
+			if (group == 0){
+				//Do Nothing
+				//currentGroupLead = 0;
+			} else{
+				//count = current index
+				listOfTimes.get(count+1)[0] = listOfTimes.get(count)[0];
+				// take that index and make next one same
+			}
+			count++;
+		}
+
+		return listOfTimes;
+		//Or maybe store as an attribute? Depends how we want the others to work
+		*/
 		
 
 		ArrayList<Double> riderTimes = new ArrayList<>();
@@ -153,7 +220,7 @@ public class Stages {
 		riderTimes.add(9.5);
 		riderTimes.add(27.2);
 
-		HashMap<Double, Double> timeRiderDict = new HashMap();
+		HashMap<Double, Double> timeRiderDict = new HashMap<>();
 		for (int i = 0; i < 7; i++) {
 			timeRiderDict.put(riderTimes.get(i), Double.valueOf(i));
 		}
@@ -171,11 +238,6 @@ public class Stages {
 		for (Double[] set : listOfTimes) {
 			System.out.print(Arrays.toString(set));
 		}
-		// // for (Integer id : results.keySet()) {a
-  		// // 	listOfTimes.add(realElapsedTime(id) + " " + id);
-		// // }
-
-
 
 		ArrayList<Integer> groupList = new ArrayList<>();
 		int groupCount = 1;
@@ -198,9 +260,7 @@ public class Stages {
 // //When 0 do nothing
 // //When number, change all values with that number to the value of the first instance of that number
 // get the first number because its the first not 0 then if they equal that number all equal the first number ??
-// //BUT HOWWW???
-		int currentGroupLead = 0;
-		Double groupTime = 0.0d;
+
 		int count = 0;
 		for (int group : groupList) {
 			if (group == 0){
