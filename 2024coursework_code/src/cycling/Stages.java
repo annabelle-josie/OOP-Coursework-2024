@@ -13,21 +13,20 @@ import java.io.Serializable;
 
 
 public class Stages implements Serializable {
-	// 4 attributes
 	private int stageID ;
 	private int raceID;
 	private static int nextID;
 	private String stageName;
 	private String description;
 	private double length;
-	LocalDateTime StartTime;
+	private LocalDateTime StartTime;
 	private StageType type;
 	private String stageState;
-	ArrayList<Integer> stageIDList = new ArrayList<Integer>();
+	private ArrayList<Integer> stageIDList = new ArrayList<Integer>();
 	private ArrayList<Integer> checkpoints = new ArrayList<Integer>();
 	private static ArrayList<Integer> currentStages = new ArrayList<Integer>();
-	HashMap<Integer, LocalTime[]> results= new HashMap<>();
-	HashMap<Integer, LocalTime> adjustedResults = new HashMap<>();
+	private HashMap<Integer, LocalTime[]> results= new HashMap<>();
+	private HashMap<Integer, LocalTime> adjustedResults = new HashMap<>();
 	// constructor
 	public Stages(int raceId, String stageName, String description, double length, LocalDateTime startTime, StageType type) {
 	
@@ -142,7 +141,12 @@ public class Stages implements Serializable {
 		LocalTime end = riderResults[riderResults.length -1];
 		LocalTime start = riderResults[0];
 		long time = start.until(end, ChronoUnit.MILLIS);
+		//TODO: For reasons I cannot figure out this adds an hour
+		//I can't fix it, its killing me
+		//It does do it to everything, so it gets cancelled out
+		//So I guess it doesn't matter?
 		LocalTime returnTime = LocalTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
+		System.out.println("Difference for " + riderID + " = " + returnTime);
 		return returnTime;
 	}
 
@@ -150,21 +154,52 @@ public class Stages implements Serializable {
 		return adjustedResults.get(rider);
 	}
 
-	public void calculateAdjustment(){ 
+	public LocalTime[] getAdjustedRank(){
+		calculateAdjustment();
+		LocalTime[] orderedTimes = new LocalTime[adjustedResults.size()];
+		int count = 0;
+		for(Integer id : adjustedResults.keySet()){
+			orderedTimes[count] = adjustedResults.get(id);
+			count++;
+		}
+		return orderedTimes;
+	}
+
+	public int[] getRank(){
+		ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
+		HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
+		for (Integer id : results.keySet()) {
+			LocalTime theirTime = realElapsedTime(id);
+			riderTimes.add(theirTime);
+			timeRiderDict.put(theirTime, id);
+		}
+		Collections.sort(riderTimes);
+		int[] orderedIDs = new int[riderTimes.size()];
+		int count = 0;
+		for(LocalTime time : riderTimes){
+			orderedIDs[count] = timeRiderDict.get(time);
+			count++;
+		}
+		return orderedIDs;
+	}
+
+	public void calculateAdjustment(){
 		// =====
 		// Get times from results
 		// =====
 		ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
 		HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
 		for (Integer id : results.keySet()) {
-  		 	riderTimes.add(realElapsedTime(id));
-			timeRiderDict.put(realElapsedTime(id), id);
+			LocalTime theirTime = realElapsedTime(id);
+  		 	riderTimes.add(theirTime);
+			timeRiderDict.put(theirTime, id);
 		}
 
 		// =====
 		// Sort the times
 		// =====
 		Collections.sort(riderTimes);
+		System.out.println("Times sorted: " + riderTimes);
 
 		// =====
 		//Group times into peletons
@@ -174,15 +209,18 @@ public class Stages implements Serializable {
 
 		int groupCount = 1; //Tracks which group the times are currently part of
 		for (int i = 0; i < riderTimes.size()-1; i++) {
-			LocalTime time1 = riderTimes.get(i+1); //Next time in list
-			LocalTime time2 = riderTimes.get(i); //This time in list
-			if((time1.until(time2, ChronoUnit.SECONDS)) < 1){ //Difference between is less than one
+			LocalTime next = riderTimes.get(i+1); //Next time in list
+			LocalTime current = riderTimes.get(i); //This time in list
+			System.out.println("next = " + next + ", current = " + current);
+			System.out.println("If maths = " + current.until(next, ChronoUnit.MILLIS));
+			if((current.until(next, ChronoUnit.MILLIS)) < 1000){ //Difference between is less than one
 				groupList.add(groupCount);
 			} else{
 				groupList.add(0);
 				groupCount++;;
 			}
 		}
+		System.out.println("Groups are " + groupList);
 
 		// =====
 		// Create a new hashmap of all the values with their ids

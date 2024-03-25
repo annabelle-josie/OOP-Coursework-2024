@@ -43,14 +43,14 @@ public class CyclingPortalTestApp {
 			System.out.println("sorry");		
 		}
 
-		portal1.getRaceIds();
+		// portal1.getRaceIds();
+		// try {
+		// 	System.out.println(portal1.viewRaceDetails(1));
+		// } catch (IDNotRecognisedException e) {
+		// 	System.out.println("this oneeeee");
+		// }
 		try {
-			System.out.println(portal1.viewRaceDetails(1));
-		} catch (IDNotRecognisedException e) {
-			System.out.println("this oneeeee");
-		}
-		try {
-			System.out.println("NEW STAGE IS " + portal1.addStageToRace(0,"stage1", "hills",13.0d, LocalDateTime.now() ,StageType.FLAT));
+			portal1.addStageToRace(0,"stage1", "hills",13.0d, LocalDateTime.now() ,StageType.FLAT);
 		} catch (IDNotRecognisedException e) {
 			System.out.println("error here");
 		} catch(IllegalNameException e){
@@ -66,20 +66,20 @@ System.out.println("length broke");
 		// }catch (IDNotRecognisedException e){
 		// 	System.out.println("ahhhhh");
 		// }
-		try {
-			System.out.println(portal1.viewRaceDetails(0));
-		} catch (IDNotRecognisedException e) {
-			System.out.println("this oneeeee");
-		}
+		// try {
+		// 	System.out.println(portal1.viewRaceDetails(0));
+		// } catch (IDNotRecognisedException e) {
+		// 	System.out.println("this oneeeee");
+		// }
 		
-		try{
-			int[] stagesInRace = portal1.getRaceStages(0);
-			for (int stage : stagesInRace) {
-				System.out.println(stage);
-			}
-		}catch(IDNotRecognisedException e){
-			System.out.println("current");
-		}
+		// try{
+		// 	int[] stagesInRace = portal1.getRaceStages(0);
+		// 	for (int stage : stagesInRace) {
+		// 		System.out.println(stage);
+		// 	}
+		// }catch(IDNotRecognisedException e){
+		// 	System.out.println("current");
+		// }
 		try {
 			//int stageId, Double location, CheckpointType type, 
 			//Double averageGradient, Double length) throws IDNotRecognisedException, 
@@ -95,22 +95,22 @@ System.out.println("length broke");
 			System.out.println("stage type issues");
 		}
 
-		try {
-			System.out.println(portal1.viewRaceDetails(0));
-		} catch (IDNotRecognisedException e) {
-			System.out.println("this oneeeee");
-		}
+		// try {
+		// 	System.out.println(portal1.viewRaceDetails(0));
+		// } catch (IDNotRecognisedException e) {
+		// 	System.out.println("this oneeeee");
+		// }
 
-		try{
-			System.out.println(portal1.getNumberOfStages(0));
-		}catch(IDNotRecognisedException e){
-			System.out.println("current 1");
-		}
-		try{
-			System.out.println(portal1.getStageLength(0));
-		}catch(IDNotRecognisedException e){
-			System.out.println("current 2");
-		}
+		// try{
+		// 	System.out.println(portal1.getNumberOfStages(0));
+		// }catch(IDNotRecognisedException e){
+		// 	System.out.println("current 1");
+		// }
+		// try{
+		// 	System.out.println(portal1.getStageLength(0));
+		// }catch(IDNotRecognisedException e){
+		// 	System.out.println("current 2");
+		// }
 
 
 		
@@ -134,24 +134,24 @@ System.out.println("length broke");
 	// 	System.out.println("ID not working :()");
 	// }
 
-	try{
-		System.out.println(Arrays.toString(portal1.getStageCheckpoints(0)));
-	} catch(IDNotRecognisedException e){
-		System.out.println("Nope, im broken");
-	}
-	try{
-		portal1.removeCheckpoint(0);
-	} catch(IDNotRecognisedException e){
-		System.out.println("invalid ID");
-	}catch(InvalidStageStateException e){
-		System.out.println(" Ibalid stage state");
-	}
+	// try{
+	// 	System.out.println(Arrays.toString(portal1.getStageCheckpoints(0)));
+	// } catch(IDNotRecognisedException e){
+	// 	System.out.println("Nope, im broken");
+	// }
+	// try{
+	// 	portal1.removeCheckpoint(0);
+	// } catch(IDNotRecognisedException e){
+	// 	System.out.println("invalid ID");
+	// }catch(InvalidStageStateException e){
+	// 	System.out.println(" Ibalid stage state");
+	// }
 
-	try{
-		System.out.println(Arrays.toString(portal1.getStageCheckpoints(0)));
-	} catch(IDNotRecognisedException e){
-		System.out.println("Nope, im broken");
-	}
+	// try{
+	// 	System.out.println(Arrays.toString(portal1.getStageCheckpoints(0)));
+	// } catch(IDNotRecognisedException e){
+	// 	System.out.println("Nope, im broken");
+	// }
 
 	try {
 		portal1.concludeStagePreparation(0);
@@ -184,11 +184,11 @@ System.out.println("length broke");
 			System.out.println("sorry teams 2");		
 		}
 
-		try{
-			portal1.removeTeam(3);
-		}catch (IDNotRecognisedException e){
-			System.out.println("team");
-		}
+		// try{
+		// 	portal1.removeTeam(3);
+		// }catch (IDNotRecognisedException e){
+		// 	System.out.println("team");
+		// }
 		
 		// int[] teamList = portal1.getTeams();
 		// //System.out.println("HERES");
@@ -263,11 +263,74 @@ System.out.println("length broke");
 		}
 
 		
-		try{
-		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(10), LocalTime.now().plusMinutes(12) };
-		portal1.registerRiderResultsInStage(0,1,times);
+	
+
+	// try{
+    // 	portal1.saveCyclingPortal("file1.ser");
+	// 	} catch (Exception ex) {
+	// 		ex.printStackTrace();
+	// 		}
+	// //portal1.eraseCyclingPortal();
+	// try{
+	// 	portal1.loadCyclingPortal("file1.ser");
+	// 	} catch (Exception ex) {
+	// 		ex.printStackTrace();
+	// 		}
+			
+	// portal1.getRaceIds();
+	// 	try {
+	// 		System.out.println(portal1.viewRaceDetails(1));
+	// 	} catch (IDNotRecognisedException e) {
+	// 		System.out.println("whyyy ");
+	// 	}
+	
+
+	// try{
+	// 	LocalTime[] stagesInRace = portal1.getRiderResultsInStage(0,1);
+	// 	for (LocalTime stage : stagesInRace) {
+	// 		System.out.println(stage);
+	// 	}
+	// }catch(IDNotRecognisedException e){
+	// 	System.out.println("current");
+	// }
+
+
+	
+
+	// try{
+	// 	portal1.deleteRiderResultsInStage(0, 1);
+	// }catch(IDNotRecognisedException e){
+	// 	System.out.println("current");
+	// }
+	try {
+		System.out.println("Checkpoints: " + Arrays.toString(portal1.getStageCheckpoints(0)));
+	} catch (IDNotRecognisedException e) {
+		System.out.println("Another error, I'm dying");
+	}
+
+	// try{
+	// 	LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(10), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2)  };
+	// 	portal1.registerRiderResultsInStage(0,1,times);
+	// 	System.out.println("Registered Results for stage 0, rider 1");
+	// }catch(IDNotRecognisedException e){
+	// 	System.out.println("ID broke in register");
+	// }
+	// catch(DuplicatedResultException e){
+	// 	System.out.println("error 2");
+	// }
+	// catch(InvalidStageStateException e){
+	// 	System.out.println("error 3");
+	// }
+	// catch(InvalidCheckpointTimesException e){ 
+	// 	System.out.println("error 4");
+	// }
+
+	try{
+		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(5), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2).plusMinutes(7)  };
+		portal1.registerRiderResultsInStage(0,2,times);
+		System.out.println("Registered Results for stage 0, rider 2");
 	}catch(IDNotRecognisedException e){
-		System.out.println(e);
+		System.out.println("ID broke in register");
 	}
 	catch(DuplicatedResultException e){
 		System.out.println("error 2");
@@ -278,45 +341,70 @@ System.out.println("length broke");
 	catch(InvalidCheckpointTimesException e){ 
 		System.out.println("error 4");
 	}
-	try{
-    	portal1.saveCyclingPortal("file1.ser");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			}
-	//portal1.eraseCyclingPortal();
-	try{
-		portal1.loadCyclingPortal("file1.ser");
-		} catch (Exception ex) {
-			ex.printStackTrace();
-			}
-			
-	portal1.getRaceIds();
-		try {
-			System.out.println(portal1.viewRaceDetails(1));
-		} catch (IDNotRecognisedException e) {
-			System.out.println("whyyy ");
-		}
 
 	try{
-		LocalTime[] stagesInRace = portal1.getRiderResultsInStage(0,1);
-		for (LocalTime stage : stagesInRace) {
-			System.out.println(stage);
-		}
+		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(5), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2).plusMinutes(5).plusSeconds(1)  };
+		portal1.registerRiderResultsInStage(0,1,times);
+		System.out.println("Registered Results for stage 0, rider 0");
 	}catch(IDNotRecognisedException e){
-		System.out.println("current");
+		System.out.println("ID broke in register");
 	}
-	// try{
-	// 	portal1.deleteRiderResultsInStage(0, 1);
-	// }catch(IDNotRecognisedException e){
-	// 	System.out.println("current");
-	// }
+	catch(DuplicatedResultException e){
+		System.out.println("error 2");
+	}
+	catch(InvalidStageStateException e){
+		System.out.println("error 3");
+	}
+	catch(InvalidCheckpointTimesException e){ 
+		System.out.println("error 4");
+	}
 	
-	System.out.println("========");
+	try{
+		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(10), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2).plusMinutes(5).plusNanos(100000000)  };
+		portal1.registerRiderResultsInStage(0,0,times);
+		System.out.println("Registered Results for stage 0, rider 1");
+	}catch(IDNotRecognisedException e){
+		System.out.println("ID broke in register");
+	}
+	catch(DuplicatedResultException e){
+		System.out.println("error 2");
+	}
+	catch(InvalidStageStateException e){
+		System.out.println("error 3");
+	}
+	catch(InvalidCheckpointTimesException e){ 
+		System.out.println("error 4");
+	}
+
+
 	try {
-		portal1.getRiderAdjustedElapsedTimeInStage(0, 0);
+		System.out.println(Arrays.toString(portal1.getRiderResultsInStage(0,0)));
+		System.out.println(Arrays.toString(portal1.getRiderResultsInStage(0,1)));
+		System.out.println(Arrays.toString(portal1.getRiderResultsInStage(0,2)));
+	} catch (IDNotRecognisedException e) {
+		System.out.println("ID broke in get results");
+	}
+
+	System.out.println("========");
+
+	try {
+		System.out.println(Arrays.toString(portal1.getRidersRankInStage(0)));
+	} catch (IDNotRecognisedException e) {
+		System.out.println("ID wrong, sucker");
+	}
+
+	try {
+		System.out.println(Arrays.toString(portal1.getRankedAdjustedElapsedTimesInStage(0)));
+	} catch (IDNotRecognisedException e) {
+		System.out.println("ID wrong, sucker");
+	}
+	System.out.println("========");
+
+	try {
+		System.out.println(portal1.getRiderAdjustedElapsedTimeInStage(0, 0));
 
 	} catch (IDNotRecognisedException e) {
-		System.out.println("If this gets triggered somehting is very wrong");	
+		System.out.println("ID wrong in adjusted");	
 	}
 	
 		assert (portal1.getTeams().length == 1)

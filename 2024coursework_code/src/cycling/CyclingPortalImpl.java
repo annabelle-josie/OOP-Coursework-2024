@@ -478,12 +478,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 			}
 		}
 
-		if (!riderFound ){
-			System.out.println("Rider not found");
-			throw new IDNotRecognisedException();
-		}
-		else if (!stageFound){
-			System.out.println("Stage not found");
+		if (!riderFound || !stageFound ){
 			throw new IDNotRecognisedException();
 		}
 		if((numberOfCheckpoints+2) != checkpoints.length){
@@ -507,16 +502,16 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public LocalTime getRiderAdjustedElapsedTimeInStage(int stageId, int riderId) throws IDNotRecognisedException {
-		//Go through to get full time by last-first for all riders
-		//add to list
-		//order list
-		//find the adjustemnt (ew)
+		//TODO: I think this works!!!!
 		
 		for(Stages stage : listOfStages){
 			if (stageId == stage.getStageID()){
 				stage.calculateAdjustment();
+				System.out.println("Time Adjusted");
 				for(Riders rider : listOfRiders){
-					return stage.getAdjustedTime(rider.getRiderID());
+					if (riderId == rider.getRiderID()){
+						return stage.getAdjustedTime(rider.getRiderID());
+					}
 				}
 			}
 		}
@@ -547,8 +542,12 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 */	
 	@Override
 	public int[] getRidersRankInStage(int stageId) throws IDNotRecognisedException {
-		//TODO ; Auto-generated method stub
-		return null;
+		for (Stages stage : listOfStages) {
+			if (stageId == stage.getStageID() ){
+					return(stage.getRank());
+				}
+			}
+		throw new IDNotRecognisedException();
 	}
 	/**
 	 * Get the adjusted elapsed times of riders in a stage.
@@ -569,8 +568,12 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 */
 	@Override
 	public LocalTime[] getRankedAdjustedElapsedTimesInStage(int stageId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return null;
+		for (Stages stage : listOfStages) {
+			if (stageId == stage.getStageID() ){
+					return(stage.getAdjustedRank());
+				}
+			}
+		throw new IDNotRecognisedException();
 	}
 	/**
 	 * Get the number of points obtained by each rider in a stage.
