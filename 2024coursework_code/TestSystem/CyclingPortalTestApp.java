@@ -262,8 +262,9 @@ System.out.println("length broke");
 			System.out.println("current");
 		}
 
+		
 		try{
-		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(7), LocalTime.now().plusMinutes(10), LocalTime.now().plusMinutes(12) };
+		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(10), LocalTime.now().plusMinutes(12) };
 		portal1.registerRiderResultsInStage(0,1,times);
 	}catch(IDNotRecognisedException e){
 		System.out.println(e);
@@ -277,7 +278,25 @@ System.out.println("length broke");
 	catch(InvalidCheckpointTimesException e){ 
 		System.out.println("error 4");
 	}
-	
+	try{
+    	portal1.saveCyclingPortal("file1.ser");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			}
+	//portal1.eraseCyclingPortal();
+	try{
+		portal1.loadCyclingPortal("file1.ser");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			}
+			
+	portal1.getRaceIds();
+		try {
+			System.out.println(portal1.viewRaceDetails(1));
+		} catch (IDNotRecognisedException e) {
+			System.out.println("whyyy ");
+		}
+
 	try{
 		LocalTime[] stagesInRace = portal1.getRiderResultsInStage(0,1);
 		for (LocalTime stage : stagesInRace) {
@@ -286,15 +305,19 @@ System.out.println("length broke");
 	}catch(IDNotRecognisedException e){
 		System.out.println("current");
 	}
-	try{
-		portal1.deleteRiderResultsInStage(0, 1);
-	}catch(IDNotRecognisedException e){
-		System.out.println("current");
-	}
-
-	Races.dothis();
-	Stages.caculateAdjustment();
+	// try{
+	// 	portal1.deleteRiderResultsInStage(0, 1);
+	// }catch(IDNotRecognisedException e){
+	// 	System.out.println("current");
+	// }
 	
+	System.out.println("========");
+	try {
+		portal1.getRiderAdjustedElapsedTimeInStage(0, 0);
+
+	} catch (IDNotRecognisedException e) {
+		System.out.println("If this gets triggered somehting is very wrong");	
+	}
 	
 		assert (portal1.getTeams().length == 1)
 				: "Portal1 should have one team.";
@@ -302,6 +325,6 @@ System.out.println("length broke");
 		// assert (portal2.getTeams().length == 1)
 		// 		: "Portal2 should have one team.";
 
-	}
-
+	
+}
 }

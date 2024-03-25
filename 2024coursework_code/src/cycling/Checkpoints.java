@@ -1,6 +1,7 @@
 package cycling;
 import java.util.ArrayList;
-public class Checkpoints {
+import java.io.Serializable;
+public class Checkpoints implements Serializable {
 	// 4 attributes
 	private int checkpointID;
 	private static int nextID;

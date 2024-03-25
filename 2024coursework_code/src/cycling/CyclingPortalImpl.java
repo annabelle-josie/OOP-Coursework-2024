@@ -1,11 +1,16 @@
 package cycling;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Arrays;
-	
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
+import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 /**
  * CyclingPortalImpl is the implimentation of the CyclingPortal interface.
  * @author Amy Lewis and Annabelle Ronald
@@ -509,11 +514,13 @@ public class CyclingPortalImpl implements CyclingPortal {
 		
 		for(Stages stage : listOfStages){
 			if (stageId == stage.getStageID()){
-				stage.realElapsedTime(riderId);
+				stage.calculateAdjustment();
+				for(Riders rider : listOfRiders){
+					return stage.getAdjustedTime(rider.getRiderID());
+				}
 			}
 		}
-
-		return null;
+		throw new IDNotRecognisedException();
 	}
 
 	@Override
@@ -607,8 +614,12 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public void eraseCyclingPortal() {
+		listOfRaces.clear();
+		listOfRiders.clear();
+		listOfStages.clear();
+		listOfTeams.clear();
+		listOfCheckpoints.clear();
 		// creating a stream and write all the information to a file 
-		// TODO Auto-generated method stub
 
 	}
 /**
@@ -624,17 +635,20 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 */
 	@Override
 	public void saveCyclingPortal(String filename) throws IOException {
-		// TODO Auto-generated method stub
+		FileOutputStream writeData = new FileOutputStream(filename);
+    	ObjectOutputStream writeStream = new ObjectOutputStream(writeData);
+    	writeStream.writeObject(listOfRaces);
+		writeStream.writeObject(listOfStages);
+		writeStream.writeObject(listOfTeams);
+		writeStream.writeObject(listOfRiders);
+		writeStream.writeObject(listOfCheckpoints);
+    	writeStream.close();
+
 
 	}
 /**
 	 * Method should load and replace this MiniCyclingPortal contents with the
 	 * serialised contents stored in the file given in the argument.
-	 * <p>
-	 * The state of this MiniCyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 *
-	 * @param filename Location of the file to be loaded.
 	 * @throws IOException            If there is a problem experienced when trying
 	 *                                to load the store contents from the file.
 	 * @throws ClassNotFoundException If required class files cannot be found when
@@ -642,6 +656,15 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 */
 	@Override
 	public void loadCyclingPortal(String filename) throws IOException, ClassNotFoundException {
+		FileInputStream readData = new FileInputStream(filename);
+    	ObjectInputStream readStream = new ObjectInputStream(readData);
+
+    	ArrayList<Races> races = (ArrayList<Races>) readStream.readObject();
+		ArrayList<Stages> stages = (ArrayList<Stages>) readStream.readObject();
+		ArrayList<Teams> teams = (ArrayList<Teams>) readStream.readObject();
+		ArrayList<Riders> riders = (ArrayList<Riders>) readStream.readObject();
+		ArrayList<Checkpoints> checkpoints=  (ArrayList<Checkpoints>) readStream.readObject();
+    	readStream.close();
 		// TODO Auto-generated method stub
 
 		//Staic Attributes are not serialisable, so we might need to do something about the ID trackers here!
@@ -651,7 +674,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 	@Override
 	public void removeRaceByName(String name) throws NameNotRecognisedException {
 		Boolean found = false;
-		Boolean yes = false;
 		int count = 0;
 		int[] stages = new int[]{};
 		while (!found && count < listOfRaces.size()){
@@ -663,7 +685,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 			count++;	
 		}
 		for(int stage : stages){
-			removeStageById(stage);	
+			//removeStageById(stage);	
 		
 		}
 		
@@ -674,11 +696,8 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 	/**
 	 * Get the general classification times of riders in a race.
-	 * <p>
-	 * The state of this CyclingPortal must be unchanged if any exceptions are
-	 * thrown.
-	 * 
-	 * @param raceId The ID of the race being queried.
+	
+
 	 * @return A list of riders' times sorted by the sum of their adjusted elapsed
 	 *         times in all stages of the race. An empty list if there is no result
 	 *         for any stage in the race. These times should match the riders

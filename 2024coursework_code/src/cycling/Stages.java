@@ -2,13 +2,17 @@ package cycling;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.HashMap;
+import java.io.Serializable;
 
 
-public class Stages {
+public class Stages implements Serializable {
 	// 4 attributes
 	private int stageID ;
 	private int raceID;
@@ -23,7 +27,7 @@ public class Stages {
 	private ArrayList<Integer> checkpoints = new ArrayList<Integer>();
 	private static ArrayList<Integer> currentStages = new ArrayList<Integer>();
 	HashMap<Integer, LocalTime[]> results= new HashMap<>();
-
+	HashMap<Integer, LocalTime> adjustedResults = new HashMap<>();
 	// constructor
 	public Stages(int raceId, String stageName, String description, double length, LocalDateTime startTime, StageType type) {
 	
@@ -133,42 +137,34 @@ public class Stages {
 		return ridertimes;
 	}
 
-	public long realElapsedTime(int riderID){
+	public LocalTime realElapsedTime(int riderID){
 		LocalTime[] riderResults = results.get(riderID);
 		LocalTime end = riderResults[riderResults.length -1];
 		LocalTime start = riderResults[0];
 		long time = start.until(end, ChronoUnit.MILLIS);
-		return time;
+		LocalTime returnTime = LocalTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
+		return returnTime;
 	}
 
-	public static void caculateAdjustment(){ 
-		//TODO: Once this all works, change to the following to read in instead
-		// // for (Integer id : results.keySet()) {a
-  		// // 	listOfTimes.add(realElapsedTime(id) + " " + id);
-		// // }
-		/* 
-		
+	public LocalTime getAdjustedTime(int rider){
+		return adjustedResults.get(rider);
+	}
+
+	public void calculateAdjustment(){ 
 		// =====
 		// Get times from results
 		// =====
-		ArrayList<Double> riderTimes = new ArrayList<>(); //Array that can be sorted
-		HashMap<Double, Double> timeRiderDict = new HashMap(); //Dictionary matching times to IDs
+		ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
+		HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
 		for (Integer id : results.keySet()) {
-  		 	riderTimes.add(realElapsedTime(id)); //TODO: Might cause an error as realElapsedTime() returns long?
+  		 	riderTimes.add(realElapsedTime(id));
 			timeRiderDict.put(realElapsedTime(id), id);
 		}
 
 		// =====
-		// Sort and rejoin the IDs to the times
+		// Sort the times
 		// =====
 		Collections.sort(riderTimes);
-
-		ArrayList<Double[]> listOfTimes = new ArrayList<>(); //Finished array containing a 2D array
-		//In form [ [time, id], [time, id]]
-		for (int i = 0; i < 7; i++) {
-			Double[] temp = new Double[]{riderTimes.get(i), timeRiderDict.get(riderTimes.get(i))};
-			listOfTimes.add(temp);
-		}
 
 		// =====
 		//Group times into peletons
@@ -177,10 +173,10 @@ public class Stages {
 		//In form: {1,1,1,0,0,4,4} where non-zero indicate being members of the specified group
 
 		int groupCount = 1; //Tracks which group the times are currently part of
-		for (int i = 0; i < listOfTimes.size()-1; i++) {
-			Double time1 = listOfTimes.get(i+1)[0]; //Next time in list
-			Double time2 = listOfTimes.get(i)[0]; //This time in list
-			if((time1 - time2) < 1){ //Difference between is less than one
+		for (int i = 0; i < riderTimes.size()-1; i++) {
+			LocalTime time1 = riderTimes.get(i+1); //Next time in list
+			LocalTime time2 = riderTimes.get(i); //This time in list
+			if((time1.until(time2, ChronoUnit.SECONDS)) < 1){ //Difference between is less than one
 				groupList.add(groupCount);
 			} else{
 				groupList.add(0);
@@ -189,97 +185,29 @@ public class Stages {
 		}
 
 		// =====
-		// Reassign all times of memebers of a peleton to the leader's time
+		// Create a new hashmap of all the values with their ids
 		// =====
-		int currentGroupLead = 0;
-		Double groupTime = 0.0d;
+		adjustedResults.clear();
+		//First Value will always be unchanged
+		adjustedResults.put(0, riderTimes.get(0));
 		int count = 0;
 		for (int group : groupList) {
+			int idToChange = timeRiderDict.get(riderTimes.get(count+1));
 			if (group == 0){
-				//Do Nothing
-				//currentGroupLead = 0;
+				//Make no change
+				adjustedResults.put(idToChange, riderTimes.get(count+1));
 			} else{
-				//count = current index
-				listOfTimes.get(count+1)[0] = listOfTimes.get(count)[0];
-				// take that index and make next one same
+				//Take that index and make next one same
+				riderTimes.set(count+1, riderTimes.get(count));
+				adjustedResults.put(idToChange, riderTimes.get(count));
 			}
 			count++;
-		}
+		}	
 
-		return listOfTimes;
-		//Or maybe store as an attribute? Depends how we want the others to work
-		*/
-		
-
-		ArrayList<Double> riderTimes = new ArrayList<>();
-		riderTimes.add(8.1);
-		riderTimes.add(17.1);
-		riderTimes.add(9.6);
-		riderTimes.add(17.2);
-		riderTimes.add(17.3);
-		riderTimes.add(9.5);
-		riderTimes.add(27.2);
-
-		HashMap<Double, Double> timeRiderDict = new HashMap<>();
-		for (int i = 0; i < 7; i++) {
-			timeRiderDict.put(riderTimes.get(i), Double.valueOf(i));
+		for(int id : adjustedResults.keySet()){
+			System.out.println(id + ": " + adjustedResults.get(id));
 		}
 		
-		Collections.sort(riderTimes);
-
-		System.out.println(riderTimes);
-
-		ArrayList<Double[]> listOfTimes = new ArrayList<>();
-		for (int i = 0; i < 7; i++) {
-			Double[] temp = new Double[]{riderTimes.get(i), timeRiderDict.get(riderTimes.get(i))};
-			listOfTimes.add(temp);
-		}
-		
-		for (Double[] set : listOfTimes) {
-			System.out.print(Arrays.toString(set));
-		}
-
-		ArrayList<Integer> groupList = new ArrayList<>();
-		int groupCount = 1;
-		for (int i = 0; i < listOfTimes.size()-1; i++) {
-			//If (the first half of the string (the time) as an int of i minus the next one is smaller than one)
-			//Aka if the time distance bewteen two consecutive riders in a sorted list is smaller than 1 second
-			Double time1 = listOfTimes.get(i+1)[0];
-			Double time2 = listOfTimes.get(i)[0];
-			if((time1 - time2) < 1){
-				groupList.add(groupCount);
-			} else{
-				groupList.add(0);
-				groupCount++;;
-			}
-		}
-
-		System.out.println("\n" + groupList);
-
-// //GroupList contains something like {0,0,1,1,1,1,0,0,3,3,3,0,0,5,5,5}
-// //When 0 do nothing
-// //When number, change all values with that number to the value of the first instance of that number
-// get the first number because its the first not 0 then if they equal that number all equal the first number ??
-
-		int count = 0;
-		for (int group : groupList) {
-			if (group == 0){
-				//Do Nothing
-				//currentGroupLead = 0;
-			} else{
-				//count = current index
-				listOfTimes.get(count+1)[0] = listOfTimes.get(count)[0];
-				// take that index and make next one same
-			}
-			count++;
-		}
-
-		for (Double[] set : listOfTimes) {
-			System.out.print(Arrays.toString(set));
-		}
-
-
-		//Then return this however is most helpful!
 	}
 }
 

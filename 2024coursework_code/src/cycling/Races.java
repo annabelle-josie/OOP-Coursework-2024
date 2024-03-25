@@ -8,9 +8,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public class Races {
+public class Races implements Serializable {
 	// 4 attributes
 	private int raceID ;
 	private static int nextID;
@@ -92,27 +93,27 @@ public class Races {
 		}
         return s;
 	}
-	public static void dothis(){
-		HashMap<Integer, LocalTime> map = new HashMap<>();
-        LinkedHashMap<Integer, LocalTime> sortedMap = new LinkedHashMap<>();
-        ArrayList<LocalTime> list = new ArrayList<>();
-        map.put(1, LocalTime.now().plusSeconds(1));
-		map.put(3, LocalTime.now());
-		map.put(5, LocalTime.now().plusMinutes(2));
+	// public static void dothis(){
+	// 	HashMap<Integer, LocalTime> map = new HashMap<>();
+    //     LinkedHashMap<Integer, LocalTime> sortedMap = new LinkedHashMap<>();
+    //     ArrayList<LocalTime> list = new ArrayList<>();
+    //     map.put(1, LocalTime.now().plusSeconds(1));
+	// 	map.put(3, LocalTime.now());
+	// 	map.put(5, LocalTime.now().plusMinutes(2));
 
-        for (Map.Entry<Integer, LocalTime> entry : map.entrySet()) {
-            list.add(entry.getValue());
-        }
-        Collections.sort(list); 
-        for (LocalTime num : list) {
-            for (Entry<Integer, LocalTime> entry : map.entrySet()) {
-                if (entry.getValue().equals(num)) {
-                    sortedMap.put(entry.getKey(), num);
-                }
-            }
-        }
-        System.out.println(sortedMap);
-    }
+    //     for (Map.Entry<Integer, LocalTime> entry : map.entrySet()) {
+    //         list.add(entry.getValue());
+    //     }
+    //     Collections.sort(list); 
+    //     for (LocalTime num : list) {
+    //         for (Entry<Integer, LocalTime> entry : map.entrySet()) {
+    //             if (entry.getValue().equals(num)) {
+    //                 sortedMap.put(entry.getKey(), num);
+    //             }
+    //         }
+    //     }
+    //     System.out.println(sortedMap);
+    // }
 }
 
 	

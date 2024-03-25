@@ -1,5 +1,6 @@
 package cycling;
 import java.util.ArrayList;
+import java.io.Serializable;
 
 
 /**
@@ -10,7 +11,7 @@ import java.util.ArrayList;
  * Just getters and setters (basically)
  */
 
-public class Riders{
+public class Riders implements Serializable{
     //TODO: Is it best programming practice to declare as a group or individually?
     private int riderID, yearOfBirth;
     private static int nextID; //Static as independent of instances
