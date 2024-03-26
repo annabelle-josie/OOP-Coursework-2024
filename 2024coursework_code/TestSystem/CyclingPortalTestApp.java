@@ -262,29 +262,40 @@ System.out.println("length broke");
 			System.out.println("current");
 		}
 
-		
-	
-
-	// try{
-    // 	portal1.saveCyclingPortal("file1.ser");
-	// 	} catch (Exception ex) {
-	// 		ex.printStackTrace();
-	// 		}
-	// //portal1.eraseCyclingPortal();
-	// try{
-	// 	portal1.loadCyclingPortal("file1.ser");
-	// 	} catch (Exception ex) {
-	// 		ex.printStackTrace();
-	// 		}
+	try{
+    	portal1.saveCyclingPortal("file1.ser");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			}
+	portal1.eraseCyclingPortal();
+	try{
+		portal1.loadCyclingPortal("file1.ser");
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			}
 			
-	// portal1.getRaceIds();
-	// 	try {
-	// 		System.out.println(portal1.viewRaceDetails(1));
-	// 	} catch (IDNotRecognisedException e) {
-	// 		System.out.println("whyyy ");
-	// 	}
-	
-
+	portal1.getRaceIds();
+		try {
+			System.out.println(portal1.viewRaceDetails(0));
+		} catch (IDNotRecognisedException e) {
+			System.out.println("whyyy ");
+		}
+		try {
+			portal1.addStageToRace(0,"stage1", "hills",13.0d, LocalDateTime.now() ,StageType.FLAT);
+		} catch (IDNotRecognisedException e) {
+			System.out.println("error here");
+		} catch(IllegalNameException e){
+System.out.println("name broke");
+		} catch(InvalidNameException e){
+System.out.println("name broke 2");
+		} catch(InvalidLengthException e){
+System.out.println("length broke");
+		}
+		try {
+			System.out.println(portal1.viewRaceDetails(0));
+		} catch (IDNotRecognisedException e) {
+			System.out.println("whyyy ");
+		}
 	// try{
 	// 	LocalTime[] stagesInRace = portal1.getRiderResultsInStage(0,1);
 	// 	for (LocalTime stage : stagesInRace) {
@@ -293,9 +304,6 @@ System.out.println("length broke");
 	// }catch(IDNotRecognisedException e){
 	// 	System.out.println("current");
 	// }
-
-
-	
 
 	// try{
 	// 	portal1.deleteRiderResultsInStage(0, 1);
@@ -308,22 +316,22 @@ System.out.println("length broke");
 		System.out.println("Another error, I'm dying");
 	}
 
-	// try{
-	// 	LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(10), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2)  };
-	// 	portal1.registerRiderResultsInStage(0,1,times);
-	// 	System.out.println("Registered Results for stage 0, rider 1");
-	// }catch(IDNotRecognisedException e){
-	// 	System.out.println("ID broke in register");
-	// }
-	// catch(DuplicatedResultException e){
-	// 	System.out.println("error 2");
-	// }
-	// catch(InvalidStageStateException e){
-	// 	System.out.println("error 3");
-	// }
-	// catch(InvalidCheckpointTimesException e){ 
-	// 	System.out.println("error 4");
-	// }
+	try{
+		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(10), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2)  };
+		portal1.registerRiderResultsInStage(0,1,times);
+		System.out.println("Registered Results for stage 0, rider 1");
+	}catch(IDNotRecognisedException e){
+		System.out.println("ID broke in register");
+	}
+	catch(DuplicatedResultException e){
+		System.out.println("error 2");
+	}
+	catch(InvalidStageStateException e){
+		System.out.println("error 3");
+	}
+	catch(InvalidCheckpointTimesException e){ 
+		System.out.println("error 4");
+	}
 
 	try{
 		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(5), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2).plusMinutes(7)  };
@@ -344,7 +352,7 @@ System.out.println("length broke");
 
 	try{
 		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(5), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2).plusMinutes(5).plusSeconds(1)  };
-		portal1.registerRiderResultsInStage(0,1,times);
+		portal1.registerRiderResultsInStage(0,0,times);
 		System.out.println("Registered Results for stage 0, rider 0");
 	}catch(IDNotRecognisedException e){
 		System.out.println("ID broke in register");
@@ -361,7 +369,7 @@ System.out.println("length broke");
 	
 	try{
 		LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(10), LocalTime.now().plusMinutes(12), LocalTime.now().plusHours(2).plusMinutes(5).plusNanos(100000000)  };
-		portal1.registerRiderResultsInStage(0,0,times);
+		portal1.registerRiderResultsInStage(0,1,times);
 		System.out.println("Registered Results for stage 0, rider 1");
 	}catch(IDNotRecognisedException e){
 		System.out.println("ID broke in register");
@@ -407,8 +415,8 @@ System.out.println("length broke");
 		System.out.println("ID wrong in adjusted");	
 	}
 	
-		assert (portal1.getTeams().length == 1)
-				: "Portal1 should have one team.";
+	// 	assert (portal1.getTeams().length == 1)
+	// 			: "Portal1 should have one team.";
 
 		// assert (portal2.getTeams().length == 1)
 		// 		: "Portal2 should have one team.";

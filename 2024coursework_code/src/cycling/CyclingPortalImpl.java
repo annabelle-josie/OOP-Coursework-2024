@@ -58,7 +58,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public String viewRaceDetails(int raceId) throws IDNotRecognisedException {
-		String s = "hi";
+		String s = "";
 		for (Races races : listOfRaces) {
 			System.out.println(races.getRaceID());
 			if (raceId == races.getRaceID()){
@@ -449,14 +449,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 
 	@Override
-	//Record the times of a rider in a stage.
-	/** @param checkpointTimes An array of times at which the rider reached each of the
-	 *                    checkpoints of the stage, including the start time and the
-	 *                    finish line.
-	 * @throws DuplicatedResultException   Thrown if the rider has already a result
-	 *                                     for the stage. Each rider can have only
-	 *                                     one result per stage.
-	 */
+
 	public void registerRiderResultsInStage(int stageId, int riderId, LocalTime... checkpoints) throws IDNotRecognisedException, DuplicatedResultException, InvalidCheckpointTimesException, InvalidStageStateException{
 		boolean riderFound = false;
 		boolean stageFound = false;
@@ -469,7 +462,8 @@ public class CyclingPortalImpl implements CyclingPortal {
 			if (stageId == stage.getStageID() && riderFound){
 				stageFound = true;
 				numberOfCheckpoints = (stage.getCheckpoints()).length;
-				if (!(stage.getStageState() == "waiting for results")){
+				if (!(stage.getStageState().equals("waiting for results"))){
+					System.out.println("why are you broken");
 					throw new InvalidStageStateException();
 				} else {
 		// if rider times is not empty execption else add the times 
@@ -528,18 +522,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 			}
 		}
 		
-	/**
-	 * Get the riders finished position in a a stage.
-	 * <p>
-	 * The state of this MiniCyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 * 
-	 * @param stageId The ID of the stage being queried.
-	 * @return A list of riders ID sorted by their elapsed time. An empty list if
-	 *         there is no result for the stage.
-	 * @throws IDNotRecognisedException If the ID does not match any stage in the
-	 *                                  system.
-	 */	
 	@Override
 	public int[] getRidersRankInStage(int stageId) throws IDNotRecognisedException {
 		for (Stages stage : listOfStages) {
@@ -549,23 +531,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 			}
 		throw new IDNotRecognisedException();
 	}
-	/**
-	 * Get the adjusted elapsed times of riders in a stage.
-	 * <p>
-	 * The state of this MiniCyclingPortal must be unchanged if any exceptions are
-	 * thrown.
-	 * 
-	 * @param stageId The ID of the stage being queried.
-	 * @return The ranked list of adjusted elapsed times sorted by their finish
-	 *         time. An empty list if there is no result for the stage. These times
-	 *         should match the riders returned by
-	 *         {@link #getRidersRankInStage(int)}. Assume the total elapsed time of
-	 *         in a stage never exceeds 24h and, therefore, can be represented by a
-	 *         LocalTime variable. There is no need to check for this condition or
-	 *         raise any exception.
-	 * @throws IDNotRecognisedException If the ID does not match any stage in the
-	 *                                  system.
-	 */
+	
 	@Override
 	public LocalTime[] getRankedAdjustedElapsedTimesInStage(int stageId) throws IDNotRecognisedException {
 		for (Stages stage : listOfStages) {
@@ -577,17 +543,10 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 	/**
 	 * Get the number of points obtained by each rider in a stage.
-	 * <p>
-	 * The state of this MiniCyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 * 
-	 * @param stageId The ID of the stage being queried.
 	 * @return The ranked list of points each riders received in the stage, sorted
 	 *         by their elapsed time. An empty list if there is no result for the
 	 *         stage. These points should match the riders returned by
 	 *         {@link #getRidersRankInStage(int)}.
-	 * @throws IDNotRecognisedException If the ID does not match any stage in the
-	 *                                  system.
 	 */
 	@Override
 	public int[] getRidersPointsInStage(int stageId) throws IDNotRecognisedException {
@@ -597,18 +556,11 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 		/**
 	 * Get the number of mountain points obtained by each rider in a stage.
-	 * <p>
-	 * The state of this MiniCyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 * 
-	 * @param stageId The ID of the stage being queried.
 	 * @return The ranked list of mountain points each riders received in the stage,
 	 *         sorted by their finish time. An empty list if there is no result for
 	 *         the stage. These points should match the riders returned by
 	 *         {@link #getRidersRankInStage(int)}.
-	 * @throws IDNotRecognisedException If the ID does not match any stage in the
-	 *                                  system.
-	 */
+	*/
 	@Override
 	public int[] getRidersMountainPointsInStage(int stageId) throws IDNotRecognisedException {
 		// TODO Auto-generated method stub
@@ -626,13 +578,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	}
 /**
-	 * Method saves this MiniCyclingPortal contents into a serialised file,
-	 * with the filename given in the argument.
-	 * <p>
-	 * The state of this MiniCyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 *
-	 * @param filename Location of the file to be saved.
 	 * @throws IOException If there is a problem experienced when trying to save the
 	 *                     store contents to the file.
 	 */
@@ -650,8 +595,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	}
 /**
-	 * Method should load and replace this MiniCyclingPortal contents with the
-	 * serialised contents stored in the file given in the argument.
 	 * @throws IOException            If there is a problem experienced when trying
 	 *                                to load the store contents from the file.
 	 * @throws ClassNotFoundException If required class files cannot be found when
@@ -659,16 +602,26 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 */
 	@Override
 	public void loadCyclingPortal(String filename) throws IOException, ClassNotFoundException {
+		/** shit to do 
+		 * get the self contained lists into the classes e.g. checkpoints stageIDlist
+		 * exeptions
+		 *  */ 
+		
 		FileInputStream readData = new FileInputStream(filename);
     	ObjectInputStream readStream = new ObjectInputStream(readData);
 
-    	ArrayList<Races> races = (ArrayList<Races>) readStream.readObject();
-		ArrayList<Stages> stages = (ArrayList<Stages>) readStream.readObject();
-		ArrayList<Teams> teams = (ArrayList<Teams>) readStream.readObject();
-		ArrayList<Riders> riders = (ArrayList<Riders>) readStream.readObject();
-		ArrayList<Checkpoints> checkpoints=  (ArrayList<Checkpoints>) readStream.readObject();
+    	listOfRaces = (ArrayList<Races>) readStream.readObject();
+		listOfStages = (ArrayList<Stages>) readStream.readObject();
+		listOfTeams = (ArrayList<Teams>) readStream.readObject();
+		listOfRiders = (ArrayList<Riders>) readStream.readObject();
+		listOfCheckpoints = (ArrayList<Checkpoints>) readStream.readObject();
     	readStream.close();
-		// TODO Auto-generated method stub
+		for (Races race : listOfRaces) {
+			System.out.println(Arrays.toString(race.checkThis()));
+		}
+		for (Stages stage : listOfStages) {
+			System.out.println(stage.getStageState());
+		}
 
 		//Staic Attributes are not serialisable, so we might need to do something about the ID trackers here!
 
@@ -699,8 +652,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 	/**
 	 * Get the general classification times of riders in a race.
-	
-
 	 * @return A list of riders' times sorted by the sum of their adjusted elapsed
 	 *         times in all stages of the race. An empty list if there is no result
 	 *         for any stage in the race. These times should match the riders
@@ -709,8 +660,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 *         exceeds 24h and, therefore, can be represented by a LocalTime
 	 *         variable. There is no need to check for this condition or raise any
 	 *         exception.
-	 * @throws IDNotRecognisedException If the ID does not match any race in the
-	 *                                  system.
 	 */
 	public LocalTime[] getGeneralClassificationTimesInRace(int raceId) throws IDNotRecognisedException {
 		// TODO Auto-generated method stub
@@ -718,17 +667,10 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 /**
 	 * Get the overall points of riders in a race.
-	 * <p>
-	 * The state of this CyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 * 
-	 * @param raceId The ID of the race being queried.
 	 * @return An array of riders' points (i.e., the sum of their points in all stages
 	 *         of the race), sorted by the total adjusted elapsed time. An empty array if
 	 *         there is no result for any stage in the race. These points should
 	 *         match the riders returned by {@link #getRidersGeneralClassificationRank(int)}.
-	 * @throws IDNotRecognisedException If the ID does not match any race in the
-	 *                                  system.
 	 */
 	@Override
 	public int[] getRidersPointsInRace(int raceId) throws IDNotRecognisedException {
@@ -736,19 +678,12 @@ public class CyclingPortalImpl implements CyclingPortal {
 		return null;
 	}
 /**
-	 * Get the overall mountain points of riders in a race.
-	 * <p>
-	 * The state of this CyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 * 
-	 * @param raceId The ID of the race being queried.
+	 * Get the overall mountain points of riders in a race
 	 * @return An array of riders' mountain points (i.e., the sum of their mountain
 	 *         points in all stages of the race), sorted by the total adjusted elapsed time.
 	 *         An empty array if there is no result for any stage in the race. These
 	 *         points should match the riders returned by
 	 *         {@link #getRidersGeneralClassificationRank(int)}.
-	 * @throws IDNotRecognisedException If the ID does not match any race in the
-	 *                                  system.
 	 */
 	@Override
 	public int[] getRidersMountainPointsInRace(int raceId) throws IDNotRecognisedException {
@@ -757,17 +692,10 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 	/**
 	 * Get the general classification rank of riders in a race.
-	 * <p>
-	 * The state of this CyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 * 
-	 * @param raceId The ID of the race being queried.
 	 * @return A ranked list of riders' IDs sorted ascending by the sum of their
 	 *         adjusted elapsed times in all stages of the race. That is, the first
 	 *         in this list is the winner (least time). An empty list if there is no
 	 *         result for any stage in the race.
-	 * @throws IDNotRecognisedException If the ID does not match any race in the
-	 *                                  system.
 	*/
 
 	@Override
@@ -777,17 +705,10 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 /**
 	 * Get the ranked list of riders based on the points classification in a race.
-	 * <p>
-	 * The state of this CyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 * 
-	 * @param raceId The ID of the race being queried.
 	 * @return A ranked list of riders' IDs sorted descending by the sum of their
 	 *         points in all stages of the race. That is, the first in this list is
 	 *         the winner (more points). An empty list if there is no result for any
 	 *         stage in the race.
-	 * @throws IDNotRecognisedException If the ID does not match any race in the
-	 *                                  system.
 	 */
 	@Override
 	public int[] getRidersPointClassificationRank(int raceId) throws IDNotRecognisedException {

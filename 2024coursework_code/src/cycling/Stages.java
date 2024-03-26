@@ -42,6 +42,23 @@ public class Stages implements Serializable {
 		this.stageState = "in development" ;
 	
 	}
+	
+	public int[] getStages() {
+		int[] stagelist = new int[]{};
+		if (currentStages != null){
+			//int[] stagelist = stages.toArray(new int[stages.size()]);
+			stagelist = new int[currentStages.size()];
+			int count=0;
+        	for (int stage : currentStages) {
+            	stagelist[count] = stage;
+            	count++;
+        	}
+		}
+		return stagelist;
+	} 
+	public HashMap ahh() {
+		return results;
+	}
 
 	
 // same with adding stages to races other option just use IDS dont reference the class 

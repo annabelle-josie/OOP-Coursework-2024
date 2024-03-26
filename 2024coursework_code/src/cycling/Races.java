@@ -66,6 +66,7 @@ public class Races implements Serializable {
 		return name;
 	}
 	
+	
 	public String getDescription() { return description; }
 
 	public int[] getStages() {
@@ -81,7 +82,19 @@ public class Races implements Serializable {
 		}
 		return stagelist;
 	} 
-		
+	
+	public int[] checkThis() {
+		int[] stagelist = new int[]{};
+		if (currentRaces != null){
+			stagelist = new int[currentRaces.size()];
+			int count=0;
+        	for (int race : currentRaces) {
+            	stagelist[count] = race;
+            	count++;
+        	}
+		}
+		return stagelist;
+	} 
 
 	public Double getLength() {return length;}
 	public String raceasstring(){
