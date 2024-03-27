@@ -12,7 +12,7 @@ import java.io.Serializable;
 
 public class Teams implements Serializable{
     private int teamID;
-    private static int nextID;
+    //private static int nextID;
     private ArrayList<Integer> riders = new ArrayList<>();
     private String name, description;
 
@@ -21,9 +21,8 @@ public class Teams implements Serializable{
      * <p>
      * Creates new Team with unique ID
      */
-    public Teams(String name, String description){
-        this.teamID = nextID;
-        nextID++; 
+    public Teams(int id, String name, String description){
+        this.teamID = id;
         this.name = name;
         this.description = description;
     }

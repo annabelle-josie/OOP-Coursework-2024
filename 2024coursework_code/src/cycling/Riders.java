@@ -23,10 +23,8 @@ public class Riders implements Serializable{
      * Constructor class for rider
      * Creates new Rider with unique ID
      */
-    public Riders(String name, int yearOfBirth){
-        //ID will incriment each time. If a rider is deleted then there will just be a gap in the numbers
-        this.riderID = nextID;
-        nextID++;
+    public Riders(int id, String name, int yearOfBirth){
+        this.riderID = id;
         currentRiders.add(riderID);
         this.name = name;
         this.yearOfBirth = yearOfBirth;
@@ -39,11 +37,11 @@ public class Riders implements Serializable{
         return riderID;
     }
 
-    public static void isRider(int riderID) throws IDNotRecognisedException{
-        if (!currentRiders.contains(riderID)){
-            throw new IDNotRecognisedException();
-        }
-    }
+    // public static void isRider(int riderID) throws IDNotRecognisedException{
+    //     if (!currentRiders.contains(riderID)){
+    //         throw new IDNotRecognisedException();
+    //     }
+    // }
 
     /**
      * @return The rider's name

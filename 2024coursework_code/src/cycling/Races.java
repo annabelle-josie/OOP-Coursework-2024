@@ -20,7 +20,7 @@ public class Races implements Serializable {
 	//private stages[] stages;
 	private ArrayList<Integer> stages = new ArrayList<Integer>();
 	private Double length;
-	private static ArrayList<Integer> currentRaces = new ArrayList<Integer>();
+	//private static ArrayList<Integer> currentRaces = new ArrayList<Integer>();
 
 
 	/**
@@ -28,11 +28,11 @@ public class Races implements Serializable {
 	 * @param name
 	 * @param description
 	 */
-	public Races(String name, String description) {
+	public Races(int ID, String name, String description) {
 		// throw new throws IllegalNameException, InvalidNameException
-		this.raceID = nextID;
-        nextID++;
-        currentRaces.add(raceID);
+		this.raceID = ID;
+        //nextID++;
+        //currentRaces.add(raceID);
         this.name = name;
 		this.description = description;
 		this.length = 0.0d;
@@ -65,6 +65,7 @@ public class Races implements Serializable {
 	public String getName() {
 		return name;
 	}
+
 	
 	
 	public String getDescription() { return description; }
@@ -83,18 +84,18 @@ public class Races implements Serializable {
 		return stagelist;
 	} 
 	
-	public int[] checkThis() {
-		int[] stagelist = new int[]{};
-		if (currentRaces != null){
-			stagelist = new int[currentRaces.size()];
-			int count=0;
-        	for (int race : currentRaces) {
-            	stagelist[count] = race;
-            	count++;
-        	}
-		}
-		return stagelist;
-	} 
+	// public int[] checkThis() {
+	// 	int[] stagelist = new int[]{};
+	// 	if (currentRaces != null){
+	// 		stagelist = new int[currentRaces.size()];
+	// 		int count=0;
+    //     	for (int race : currentRaces) {
+    //         	stagelist[count] = race;
+    //         	count++;
+    //     	}
+	// 	}
+	// 	return stagelist;
+	//} 
 
 	public Double getLength() {return length;}
 	public String raceasstring(){
