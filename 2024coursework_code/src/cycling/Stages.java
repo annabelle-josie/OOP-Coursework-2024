@@ -15,7 +15,6 @@ import java.io.Serializable;
 public class Stages implements Serializable {
 	private int stageID ;
 	private int raceID;
-	private static int nextID;
 	private String stageName;
 	private String description;
 	private double length;
@@ -166,7 +165,7 @@ public class Stages implements Serializable {
 		//It does do it to everything, so it gets cancelled out
 		//So I guess it doesn't matter?
 		LocalTime returnTime = LocalTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
-		System.out.println("Difference for " + riderID + " = " + returnTime);
+		//System.out.println("Difference for " + riderID + " = " + returnTime);
 		return returnTime;
 	}
 
@@ -219,7 +218,7 @@ public class Stages implements Serializable {
 		// Sort the times
 		// =====
 		Collections.sort(riderTimes);
-		System.out.println("Times sorted: " + riderTimes);
+		//System.out.println("Times sorted: " + riderTimes);
 
 		// =====
 		//Group times into peletons
@@ -231,8 +230,8 @@ public class Stages implements Serializable {
 		for (int i = 0; i < riderTimes.size()-1; i++) {
 			LocalTime next = riderTimes.get(i+1); //Next time in list
 			LocalTime current = riderTimes.get(i); //This time in list
-			System.out.println("next = " + next + ", current = " + current);
-			System.out.println("If maths = " + current.until(next, ChronoUnit.MILLIS));
+			//System.out.println("next = " + next + ", current = " + current);
+			//System.out.println("If maths = " + current.until(next, ChronoUnit.MILLIS));
 			if((current.until(next, ChronoUnit.MILLIS)) < 1000){ //Difference between is less than one
 				groupList.add(groupCount);
 			} else{
@@ -240,7 +239,7 @@ public class Stages implements Serializable {
 				groupCount++;;
 			}
 		}
-		System.out.println("Groups are " + groupList);
+		//System.out.println("Groups are " + groupList);
 
 		// =====
 		// Create a new hashmap of all the values with their ids
@@ -312,32 +311,38 @@ public class Stages implements Serializable {
 		int[] orderedIDs = new int[]{}; 
 		ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
 		HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
-		
+		//System.out.println(Arrays.toString(results.get(0)));
 		// for the times in the stage get rank for each time then allocate points based on the time from that rank 
 		// gives all the rider IDS sorted by time for each checkpoint 
 			for(int i=1; i< checkpoints.size() +1; i++){
-				System.out.println("new " + i);
+				//System.out.println("new " + i);
 				timeRiderDict.clear();
 				riderTimes.clear();
 				for(Integer riderID : results.keySet()){
-				ahh= results.get(riderID);
-				LocalTime theirTime = ahh[i];
-				//System.out.println(" " + theirTime + " " + riderID);
-				riderTimes.add(theirTime);
-				timeRiderDict.put(theirTime, riderID);
+					ahh= results.get(riderID);
+					LocalTime theirTime = ahh[i];
+					//System.out.println("i " + i + " their time" + theirTime + "rider ID" + riderID);
+					//System.out.println(" " + theirTime + " " + riderID);
+					///System.out.println(ahh);
+					riderTimes.add(theirTime);
+					timeRiderDict.put(theirTime, riderID);
 			}
 			Collections.sort(riderTimes);
 			orderedIDs = new int[riderTimes.size()];
 			count = 0;
+			//System.out.println("running " );
 			for(LocalTime time : riderTimes){
 				orderedIDs[count] = timeRiderDict.get(time);
 				count++;
+				//System.out.println("running count " + count );
 			}
-			this.rankedCheckpointTimes.put((i-1), orderedIDs);
-			System.out.println(" this " + Arrays.toString(rankedCheckpointTimes.get(0)));
+			//System.out.println("check " +checkpoints.get(i-1));
+			this.rankedCheckpointTimes.put(checkpoints.get(i-1), orderedIDs);
+			//System.out.println(" this " + Arrays.toString(rankedCheckpointTimes.get(i-1)));
 		}
 	}
 		public int[] getRankedCheckpoint(int checkpointID){
+			//System.out.println( "times " + rankedCheckpointTimes.get(checkpointID));
 			return rankedCheckpointTimes.get(checkpointID);
 		}
 		

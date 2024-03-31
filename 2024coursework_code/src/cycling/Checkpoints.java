@@ -27,7 +27,6 @@ public class Checkpoints implements Serializable {
 	}
 	public Checkpoints(int id, int stageId, Double location) {
 		this.checkpointID = id;
-        currentCheckpoints.add(checkpointID);
 		this.stageID = stageId;
         this.location = location;
 		this.length = 0.0d;
@@ -87,11 +86,12 @@ public class Checkpoints implements Serializable {
 			Collections.addAll(listOfPoints, 10,8,6,4,2,1);
 		}else if(type == CheckpointType.HC) {
 			Collections.addAll(listOfPoints, 20,15,12,10,8,6,4,2);
-		}
+		} 
 		// if not a moutain pass by 
 		int[] returnArray = new int[size];
 		for (int i = 0;  i < size; i++) {
 			if(i <listOfPoints.size()){
+				//System.out.println("yoo");
 				//System.out.println(listOfPoints);
 				//System.out.println("length " + returnArray.length);
 				//System.out.println(Arrays.toString(returnArray));
@@ -103,9 +103,7 @@ public class Checkpoints implements Serializable {
 		}
 		return returnArray;
 	}
-		public void Sumof(int[] points){
-
-		}
+		
 		
 	}
 

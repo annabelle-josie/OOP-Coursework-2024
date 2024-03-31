@@ -171,13 +171,13 @@ public class CyclingPortalImpl implements CyclingPortal {
 				}
 		
 				listOfStages.add(new Stages(nextID, raceId ,stageName, description,length, startTime,type));
-				int stageID = listOfStages.get(listOfStages.size() -1).getStageID();
+				//int stageID = listOfStages.get(listOfStages.size() -1).getStageID();
 				for (Races race : listOfRaces) {
 					if (raceId == race.getRaceID())
-						race.setStages(stageID);
+						race.setStages(nextID);
 						race.setLength(length);
 				}		
-		return stageID;
+		return nextID;
 	}
 
 	@Override
@@ -287,6 +287,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 					nextID = 0;
 				} else{
 					nextID = checkpointIDList[checkpointIDList.length-1]+1;
+					System.out.println("next ID" + nextID);
 				}
 
 
@@ -340,6 +341,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 					nextID = 0;
 				} else{
 					nextID = checkpointIDList[checkpointIDList.length-1]+1;
+					System.out.println("next ID" + nextID);
 				}
 				listOfCheckpoints.add(new Checkpoints(nextID, stageId, location));
 				//int checkpointID = listOfCheckpoints.get(listOfCheckpoints.size() -1).getCheckpointID();
@@ -646,69 +648,72 @@ public class CyclingPortalImpl implements CyclingPortal {
 		throw new IDNotRecognisedException();
 	}
 
-		/**
-	 * Get the number of mountain points obtained by each rider in a stage.
-	 * @return The ranked list of mountain points each riders received in the stage,
-	 *         sorted by their finish time. An empty list if there is no result for
-	 *         the stage. These points should match the riders returned by
-	 *         {@link #getRidersRankInStage(int)}.
-	*/
+
 	@Override
 	public int[] getRidersMountainPointsInStage(int stageId) throws IDNotRecognisedException {
 		int current = 0;
+		boolean found = false;
 		int[] rank = new int[]{};
 		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
-		
+		int[] finished;
 		for (Stages stage : listOfStages) {
 			if (stageId == stage.getStageID() ){
-				System.out.println("working");
+				found = true;
+				//System.out.println("working");
 				stage.calulateMountainStage();
 				rank = stage.getRank();
+				System.out.println("rank " + rank);
 				int[] StageCheckpoints = stage.getCheckpoints();
-				System.out.println(Arrays.toString(StageCheckpoints));
+				System.out.println("checkpoints" + Arrays.toString(StageCheckpoints));
 				int[] returnArray = new int[StageCheckpoints.length];
 				for(int i=0; i < StageCheckpoints.length; i++){
-					System.out.println("working " + i);
-					//System.out.println(StageCheckpoints[i]);
+					//System.out.println("working " + i);
 					for (Checkpoints checkpoint :listOfCheckpoints) {
-						//System.out.println(" running " + checkpoint.getCheckpointID());
 						if (checkpoint.getCheckpointID() == StageCheckpoints[i]){
 							returnArray = stage.getRankedCheckpoint(checkpoint.getCheckpointID());
-							int [] pointArray = checkpoint.getMountainPoints(returnArray.length);
-							System.out.println("points" + Arrays.toString(pointArray));
+							if(returnArray == null){
+								continue;
+							}else{
 							System.out.println("ids" + Arrays.toString(returnArray));
+							int [] pointArray = checkpoint.getMountainPoints(returnArray.length);
+							//System.out.println("points" + Arrays.toString(pointArray));
+							//System.out.println("ids" + Arrays.toString(returnArray));
 							for(int j = 0; j< pointArray.length; j++){
 								if(pointsInStage.get(returnArray[j])== null){
 									current = 0;
-								} else current = pointsInStage.get(returnArray[j]);
-								pointsInStage.put(returnArray[j],current + pointArray[j]);
-								//System.out.println(" count " + count);
-								//System.out.println(" current " +current);
-							
+								} else 
+									current = pointsInStage.get(returnArray[j]);
+									pointsInStage.put(returnArray[j],current + pointArray[j]);
+								
 							}
-							System.out.println(pointsInStage);
-							System.out.println("rank " + Arrays.toString(rank));
-						}
+							//System.out.println(pointsInStage);
+							//System.out.println("rank " + Arrays.toString(rank));
+							}	}		
 							// match the points to the iDS each time and record the id and
 							// add points each time for that iD somehow
 						
 
 						}
-				}
-				
-			}
+					}
+				finished = new int[rank.length];
+				int count2 = 0;
+				for (int id : rank) {
+					if(pointsInStage.containsKey(rank[id])){
+						finished[count2] = pointsInStage.get(id);
+					}
+						count2 ++;
+					}
+			return finished;
+			} 
+		}
 			
-			}	
-			int[] finished = new int[rank.length];
-			int count2 = 0;
-			for (int id : rank) {
-				if(pointsInStage.containsKey(rank[id])){
-					finished[count2] = pointsInStage.get(id);
-					//throw new IDNotRecognisedException();
-				}
-			count2 ++;
+			if(!found)	{
+				throw new IDNotRecognisedException();
 			}
-		return finished;
+		
+		return finished = new int[]{};
+			
+		
 	}
 		
 	
@@ -723,10 +728,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 		// creating a stream and write all the information to a file 
 
 	}
-/**
-	 * @throws IOException If there is a problem experienced when trying to save the
-	 *                     store contents to the file.
-	 */
+
 	@Override
 	public void saveCyclingPortal(String filename) throws IOException {
 		FileOutputStream writeData = new FileOutputStream(filename);
@@ -737,21 +739,11 @@ public class CyclingPortalImpl implements CyclingPortal {
 		writeStream.writeObject(listOfRiders);
 		writeStream.writeObject(listOfCheckpoints);
     	writeStream.close();
-
-
+		
 	}
-/**
-	 * @throws IOException            If there is a problem experienced when trying
-	 *                                to load the store contents from the file.
-	 * @throws ClassNotFoundException If required class files cannot be found when
-	 *                                loading.
-	 */
+
 	@Override
 	public void loadCyclingPortal(String filename) throws IOException, ClassNotFoundException {
-		/** shit to do 
-		 * get the self contained lists into the classes e.g. checkpoints stageIDlist
-		 * exeptions
-		 *  */ 
 		
 		FileInputStream readData = new FileInputStream(filename);
     	ObjectInputStream readStream = new ObjectInputStream(readData);
@@ -762,6 +754,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 		listOfRiders = (ArrayList<Riders>) readStream.readObject();
 		listOfCheckpoints = (ArrayList<Checkpoints>) readStream.readObject();
     	readStream.close();
+		
 		// for (Races race : listOfRaces) {
 		// 	System.out.println(Arrays.toString(race.checkThis()));
 		// }
@@ -820,23 +813,118 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 */
 	@Override
 	public int[] getRidersPointsInRace(int raceId) throws IDNotRecognisedException {
-		
-		return null;
+		int current = 0;
+		boolean found = false;
+		int[] rank = new int[]{};
+		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
+		int[] finished;
+		for (Races race : listOfRaces) {
+			if (raceId== race.getRaceID() ){
+				System.out.println("id" + race.getRaceID());
+				found = true;
+				//System.out.println("working");
+				int[] stages = race.getStages();
+				System.out.println("stages " + Arrays.toString(race.getStages()));
+				int[] returnArray = new int[stages.length];
+				for(int i=0; i < stages.length; i++){
+					//System.out.println("working " + i);
+					for (Stages stage :listOfStages) {
+						if (stage.getStageID() == stages[i]){
+							int [] pointArray = getRidersPointsInStage(stage.getStageID());
+							returnArray = stage.getRank();
+							if(returnArray == null){
+								continue;
+							}else{
+								//System.out.println("points races " + i + Arrays.toString(pointArray)); //System.out.println("ids" + Arrays.toString(returnArray));
+								for(int j = 0; j< pointArray.length; j++){
+									if(pointsInStage.get(returnArray[j]) == null){
+										current = 0;
+										//System.out.println("once");
+									}else
+									current = pointsInStage.get(returnArray[j]);
+									//System.out.println("twice");
+									//System.out.println(" current " +current);
+									pointsInStage.put(returnArray[j],current + pointArray[j]);
+									//int[] returnArray = new int[StageCheckpoints.length];
+								}
+
+						
+								}
+							}
+							}		
+						System.out.println("points in stage " + pointsInStage);
+						
+						}
+					}
+					
+				}
+				return finished = new int[]{1,2,3};
 	}
 /**
-	 * Get the overall mountain points of riders in a race
-	 * @return An array of riders' mountain points (i.e., the sum of their mountain
-	 *         points in all stages of the race), sorted by the total adjusted elapsed time.
-	 *         An empty array if there is no result for any stage in the race. These
-	 *         points should match the riders returned by
+	 * sorted by the total adjusted elapsed time.
+	 *     These   points should match the riders returned by
 	 *         {@link #getRidersGeneralClassificationRank(int)}.
 	 */
 	@Override
 	public int[] getRidersMountainPointsInRace(int raceId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
+		int current = 0;
+		boolean found = false;
+		int[] rank = new int[]{};
+		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
+		int[] finished;
+		for (Races race : listOfRaces) {
+			if (raceId== race.getRaceID() ){
+				System.out.println("id" + race.getRaceID());
+				found = true;
+				//System.out.println("working");
+				int[] stages = race.getStages();
+				System.out.println("stages " + Arrays.toString(race.getStages()));
+				int[] returnArray = new int[stages.length];
+				for(int i=0; i < stages.length; i++){
+					//System.out.println("working " + i);
+					for (Stages stage :listOfStages) {
+						if (stage.getStageID() == stages[i]){
+							int [] pointArray = getRidersMountainPointsInStage(stage.getStageID());
+							returnArray = stage.getRank();
+							if(returnArray == null){
+								continue;
+							}else{
+								//System.out.println("points races " + i + Arrays.toString(pointArray)); //System.out.println("ids" + Arrays.toString(returnArray));
+								for(int j = 0; j< pointArray.length; j++){
+									if(pointsInStage.get(returnArray[j]) == null){
+										current = 0;
+										//System.out.println("once");
+									}else
+									current = pointsInStage.get(returnArray[j]);
+									//System.out.println("twice");
+									System.out.println(" current " +current);
+									pointsInStage.put(returnArray[j],current + pointArray[j]);
+									//int[] returnArray = new int[StageCheckpoints.length];
+								}
+
+						
+								}
+							}
+							}	}	
+						System.out.println("points in stage " + pointsInStage);
+						return finished = new int[]{1,2,3};
+
+						
+					
+				// need th clasification rank to sort this one
+			} 
+		}
+			
+			if(!found)	{
+				throw new IDNotRecognisedException();
+			}
 		
-		return null;
+		return finished = new int[]{};
+			
+		
 	}
+			
+	
 	/**
 	 * Get the general classification rank of riders in a race.
 	 * @return A ranked list of riders' IDs sorted ascending by the sum of their
@@ -912,18 +1000,11 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 /**
 	 * Get the ranked list of riders based on the mountain classification in a race.
-	 * <p>
-	 * The state of this CyclingPortal must be unchanged if any
-	 * exceptions are thrown.
-	 * 
-	 * @param raceId The ID of the race being queried.
 	 * @return A ranked list of riders' IDs sorted descending by the sum of their
 	 *         mountain points in all stages of the race. That is, the first in this
 	 *         list is the winner (more points). An empty list if there is no result
 	 *         for any stage in the race.
-	 * @throws IDNotRecognisedException If the ID does not match any race in the
-	 *                                  system.
-	 */
+	*/
 	@Override
 	public int[] getRidersMountainPointClassificationRank(int raceId) throws IDNotRecognisedException {
 		// TODO Auto-generated method stub
