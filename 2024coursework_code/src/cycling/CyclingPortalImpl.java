@@ -291,12 +291,12 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 
 				listOfCheckpoints.add(new Checkpoints(nextID, stageId, location, type,averageGradient,length));
-				int checkpointID = listOfCheckpoints.get(listOfCheckpoints.size() -1).getCheckpointID();
+				//int checkpointID = listOfCheckpoints.get(listOfCheckpoints.size()-1).getCheckpointID();
 				for (Stages stage : listOfStages) {
 					if (stageId == stage.getStageID())
-						stage.addCheckpoint(checkpointID);
+						stage.addCheckpoint(nextID);
 				}		
-		return checkpointID;
+		return nextID;
 	}
 
 	@Override
@@ -328,13 +328,27 @@ public class CyclingPortalImpl implements CyclingPortal {
 				if (stagetype == StageType.TT){
 					throw new InvalidStageTypeException();
 				}
-				listOfCheckpoints.add(new Checkpoints(stageId, location));
-				int checkpointID = listOfCheckpoints.get(listOfCheckpoints.size() -1).getCheckpointID();
+				
+				int nextID;	
+				int[] checkpointIDList = new int[listOfCheckpoints.size()];
+				int count = 0;
+				for (Checkpoints checkpoint : listOfCheckpoints) {
+					checkpointIDList[count] = checkpoint.getCheckpointID();
+					count++;
+				}
+				if(checkpointIDList.length == 0){
+					nextID = 0;
+				} else{
+					nextID = checkpointIDList[checkpointIDList.length-1]+1;
+				}
+				listOfCheckpoints.add(new Checkpoints(nextID, stageId, location));
+				//int checkpointID = listOfCheckpoints.get(listOfCheckpoints.size() -1).getCheckpointID();
 				for (Stages stage : listOfStages) {
 					if (stageId == stage.getStageID())
-						stage.addCheckpoint(checkpointID);
+						stage.addCheckpoint(nextID);
 				}		
-		return checkpointID;
+		return nextID;
+
 	}
 
 	@Override
@@ -641,29 +655,63 @@ public class CyclingPortalImpl implements CyclingPortal {
 	*/
 	@Override
 	public int[] getRidersMountainPointsInStage(int stageId) throws IDNotRecognisedException {
+		int current = 0;
+		int[] rank = new int[]{};
+		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
 		
-		// int[] StageCheckpoints = new int[]{};
-		// int size;
-		// int count = 0;
-		int[]ahh = new int[]{1,2,3};
-		//int why = 0;
 		for (Stages stage : listOfStages) {
 			if (stageId == stage.getStageID() ){
-				ahh[0] = 5;
-				System.out.println(stage.calulateMountainStage());
-				
-		// 		StageCheckpoints = stage.getCheckpoints();
-		// 		size = stage.getResultsSize();
-		// 		count = 0;
-		// 		for (Checkpoints checkpoint : StageCheckpoints) {
-		// 			 StageCheckpoints[count] = checkpoint.getMountainPoints(size);
-		// 			 count ++;
+				System.out.println("working");
+				stage.calulateMountainStage();
+				rank = stage.getRank();
+				int[] StageCheckpoints = stage.getCheckpoints();
+				System.out.println(Arrays.toString(StageCheckpoints));
+				int[] returnArray = new int[StageCheckpoints.length];
+				for(int i=0; i < StageCheckpoints.length; i++){
+					System.out.println("working " + i);
+					//System.out.println(StageCheckpoints[i]);
+					for (Checkpoints checkpoint :listOfCheckpoints) {
+						//System.out.println(" running " + checkpoint.getCheckpointID());
+						if (checkpoint.getCheckpointID() == StageCheckpoints[i]){
+							returnArray = stage.getRankedCheckpoint(checkpoint.getCheckpointID());
+							int [] pointArray = checkpoint.getMountainPoints(returnArray.length);
+							System.out.println("points" + Arrays.toString(pointArray));
+							System.out.println("ids" + Arrays.toString(returnArray));
+							for(int j = 0; j< pointArray.length; j++){
+								if(pointsInStage.get(returnArray[j])== null){
+									current = 0;
+								} else current = pointsInStage.get(returnArray[j]);
+								pointsInStage.put(returnArray[j],current + pointArray[j]);
+								//System.out.println(" count " + count);
+								//System.out.println(" current " +current);
+							
+							}
+							System.out.println(pointsInStage);
+							System.out.println("rank " + Arrays.toString(rank));
+						}
+							// match the points to the iDS each time and record the id and
+							// add points each time for that iD somehow
+						
+
+						}
 				}
+				
 			}
-		// 	throw new IDNotRecognisedException();
-		// }
-		return ahh;
+			
+			}	
+			int[] finished = new int[rank.length];
+			int count2 = 0;
+			for (int id : rank) {
+				if(pointsInStage.containsKey(rank[id])){
+					finished[count2] = pointsInStage.get(id);
+					//throw new IDNotRecognisedException();
+				}
+			count2 ++;
+			}
+		return finished;
 	}
+		
+	
 
 	@Override
 	public void eraseCyclingPortal() {

@@ -22,16 +22,17 @@ public class Stages implements Serializable {
 	private LocalDateTime StartTime;
 	private StageType type;
 	private String stageState;
-	private ArrayList<Integer> stageIDList = new ArrayList<Integer>();
+	//private ArrayList<Integer> stageIDList = new ArrayList<Integer>();
 	private ArrayList<Integer> checkpoints = new ArrayList<Integer>();
-	private static ArrayList<Integer> currentStages = new ArrayList<Integer>();
+	//private static ArrayList<Integer> currentStages = new ArrayList<Integer>();
 	private HashMap<Integer, LocalTime[]> results= new HashMap<>();
 	private HashMap<Integer, LocalTime> adjustedResults = new HashMap<>();
+	private HashMap<Integer, int[]> rankedCheckpointTimes = new HashMap<>();
 	// constructor
 	public Stages(int id, int raceId, String stageName, String description, double length, LocalDateTime startTime, StageType type) {
 	
 		this.stageID = id;
-        currentStages.add(stageID);
+        //currentStages.add(stageID);
 		this.raceID = raceId;
 		this.stageName = stageName;
 		this.description = description;
@@ -42,19 +43,19 @@ public class Stages implements Serializable {
 	
 	}
 	
-	public int[] getStages() {
-		int[] stagelist = new int[]{};
-		if (currentStages != null){
-			//int[] stagelist = stages.toArray(new int[stages.size()]);
-			stagelist = new int[currentStages.size()];
-			int count=0;
-        	for (int stage : currentStages) {
-            	stagelist[count] = stage;
-            	count++;
-        	}
-		}
-		return stagelist;
-	} 
+	// public int[] getStages() {
+	// 	int[] stagelist = new int[]{};
+	// 	if (currentStages != null){
+	// 		//int[] stagelist = stages.toArray(new int[stages.size()]);
+	// 		stagelist = new int[currentStages.size()];
+	// 		int count=0;
+    //     	for (int stage : currentStages) {
+    //         	stagelist[count] = stage;
+    //         	count++;
+    //     	}
+	// 	}
+	// 	return stagelist;
+	// } 
 	
 	
 // same with adding stages to races other option just use IDS dont reference the class 
@@ -111,7 +112,10 @@ public class Stages implements Serializable {
 		return type;
 	}
 	public int getResultsSize(){
-		return results.size();
+		//System.out.println("ahhhh " +results.get(checkpointID).length);
+		return checkpoints.size() ;
+		// id not by checkpoint by rider ids
+		// need to get a list of the checkpoints time in the right order
 	}
 	public int[] getCheckpoints(){
 		int[] checkpointlist = new int[]{};
@@ -268,9 +272,10 @@ public class Stages implements Serializable {
 		//HashMap<Integer, Integer> pointsInStage= new HashMap<>();
 		ArrayList<Integer> listOfPoints = new ArrayList<Integer>();
 		if(type == StageType.FLAT){
-			Collections.addAll(listOfPoints, 50,20,20,18,16,14,12,10,8,7,6,5,4,3,2);
+			Collections.addAll(listOfPoints, 50,30,20,18,16,14,12,10,8,7,6,5,4,3,2);
 		}else if(type == StageType.MEDIUM_MOUNTAIN){
-			Collections.addAll(listOfPoints, 50,20,20,18,16,14,12,10,8,7,6,5,4,3,2);
+			// change points to correct
+						Collections.addAll(listOfPoints, 50,20,20,18,16,14,12,10,8,7,6,5,4,3,2);
 		}else if(type == StageType.TT || type == StageType.HIGH_MOUNTAIN) {
 			Collections.addAll(listOfPoints, 20,17,15,13,11,10,9,8,7,6,5,4,3,2,1);
 		}
@@ -298,42 +303,45 @@ public class Stages implements Serializable {
 		
 		
 	} 
-	public int calulateMountainStage(){
+	public void calulateMountainStage(){
+		//have a list of checkpoints for rider id 
+		// create a list of times for each checkpoint and sort that pass in the scores and add them to rider ID totals 
+		// calculate riders order for each checkpoint and sum them up
 		LocalTime[] ahh= new LocalTime[]{};
 		int count = 0;
 		int[] orderedIDs = new int[]{}; 
 		ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
 		HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
-
+		
 		// for the times in the stage get rank for each time then allocate points based on the time from that rank 
-		for (Integer checkpoint: checkpoints){
-			ahh = results.get(count);
-			riderTimes.clear();
-		 	for(int i = 1; i<ahh.length -1 ; i++){
-				System.out.println("asdfghj " + i  +" " +ahh[i]);
-
-		 		LocalTime theirTime = ahh[i];
-		 		riderTimes.add(theirTime);
-		 		timeRiderDict.put(theirTime, i);
-		 	}
-			System.out.println(riderTimes);
-			//Collections.addAll(riderTimes, ahh);
-			System.out.println(riderTimes);
+		// gives all the rider IDS sorted by time for each checkpoint 
+			for(int i=1; i< checkpoints.size() +1; i++){
+				System.out.println("new " + i);
+				timeRiderDict.clear();
+				riderTimes.clear();
+				for(Integer riderID : results.keySet()){
+				ahh= results.get(riderID);
+				LocalTime theirTime = ahh[i];
+				//System.out.println(" " + theirTime + " " + riderID);
+				riderTimes.add(theirTime);
+				timeRiderDict.put(theirTime, riderID);
+			}
 			Collections.sort(riderTimes);
-		// 	orderedIDs = new int[riderTimes.size()];
-		// 	int count2 = 0;
-		// 	for(LocalTime time : riderTimes){
-		// 		orderedIDs[count2] = timeRiderDict.get(time);
-		// 		//count++;
-		// 		System.out.println(orderedIDs);
-		// 		count2++;
-		// }
-		 count++;
-	}return count;
-}
+			orderedIDs = new int[riderTimes.size()];
+			count = 0;
+			for(LocalTime time : riderTimes){
+				orderedIDs[count] = timeRiderDict.get(time);
+				count++;
+			}
+			this.rankedCheckpointTimes.put((i-1), orderedIDs);
+			System.out.println(" this " + Arrays.toString(rankedCheckpointTimes.get(0)));
+		}
+	}
+		public int[] getRankedCheckpoint(int checkpointID){
+			return rankedCheckpointTimes.get(checkpointID);
+		}
+		
+	}
 	
-}
-
-
 
 
