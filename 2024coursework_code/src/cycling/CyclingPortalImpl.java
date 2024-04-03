@@ -26,6 +26,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 	ArrayList<Teams> listOfTeams = new ArrayList<Teams>();
 	ArrayList<Riders> listOfRiders = new ArrayList<Riders>();
 	ArrayList<Checkpoints> listOfCheckpoints = new ArrayList<Checkpoints>();
+	HashMap<Integer, LocalTime> totalRiderTimes = new HashMap<>();
 
 	@Override
 	public int[] getRaceIds() {
@@ -590,13 +591,10 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 
 	@Override
-	public LocalTime getRiderAdjustedElapsedTimeInStage(int stageId, int riderId) throws IDNotRecognisedException {
-		//TODO: I think this works!!!!
-		
+	public LocalTime getRiderAdjustedElapsedTimeInStage(int stageId, int riderId) throws IDNotRecognisedException {		
 		for(Stages stage : listOfStages){
 			if (stageId == stage.getStageID()){
 				stage.calculateAdjustment();
-				System.out.println("Time Adjusted");
 				for(Riders rider : listOfRiders){
 					if (riderId == rider.getRiderID()){
 						return stage.getAdjustedTime(rider.getRiderID());
@@ -824,39 +822,13 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 *         exception.
 	 */
 	public LocalTime[] getGeneralClassificationTimesInRace(int raceId) throws IDNotRecognisedException {
-		int[] riderIDs = getRidersGeneralClassificationRank(raceId);
-		//Gives ordered array of riders
-		//All this needs to do is get their collective times in all the stages
-		HashMap<Integer, LocalTime> ranked = new HashMap<>();
+		int[] riderIDs = getRidersGeneralClassificationRank(raceId); //Ordered IDs
+		LocalTime[] returnTimes = new LocalTime[riderIDs.length];
 		for (Races race : listOfRaces) {
-			if (raceId == race.getRaceID() ){
-
-				//Loads all the stages and adds their total times together
-				int[] stagesInRace = race.getStages();
-				for(Stages stage : listOfStages){
-					Boolean contained = false;
-					for(int stageInRace: stagesInRace){
-						if (stageInRace == stage.getStageID()){
-							contained = true;
-						}
-					}
-					if (contained){
-						for(int id : riderIDs){
-							LocalTime time;
-							if (ranked.containsKey(id)){
-								LocalTime timeToAdd = stage.getAdjustedTime(id);
-								time = ranked.get(id).plusHours(timeToAdd.getHour()).plusMinutes(timeToAdd.getMinute()).plusSeconds(timeToAdd.getSecond()).plusNanos(timeToAdd.getNano());
-							} else{
-								time = stage.getAdjustedTime(id);
-							}
-							ranked.put(id, time);
-						}
-					}
-				}
-				LocalTime[] returnTimes = new LocalTime[ranked.size()];
+			if (raceId == race.getRaceID()){
 				int count = 0;
-				for (int id : ranked.keySet()) {
-					returnTimes[count] = ranked.get(id);
+				for(int id: riderIDs){
+					returnTimes[count] = totalRiderTimes.get(id);
 					count++;
 				}
 				return returnTimes;
@@ -999,7 +971,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 		//can get each stage from getAdjustedRank (to give times)
 		// and getRank to get IDs
 		//Add all together here
-		HashMap<Integer, LocalTime> classification = new HashMap<>();
+		totalRiderTimes.clear();
 		for (Races race : listOfRaces) {
 			if (raceId == race.getRaceID() ){
 
@@ -1018,13 +990,13 @@ public class CyclingPortalImpl implements CyclingPortal {
 						int[] ids = stage.getRank();
 						if (!ridersAdded){
 							for(int id : ids){
-								classification.put(id, times[id]);
+								totalRiderTimes.put(id, times[id]);
 							}
 							ridersAdded = true;
 						} else{
 							for(int id : ids){
-								LocalTime time = classification.get(id);
-								classification.put(id, times[id].plusHours(time.getHour()).plusMinutes(time.getMinute()).plusSeconds(time.getSecond()).plusNanos(time.getNano()));
+								LocalTime time = totalRiderTimes.get(id);
+								totalRiderTimes.put(id, times[id].plusHours(time.getHour()).plusMinutes(time.getMinute()).plusSeconds(time.getSecond()).plusNanos(time.getNano()));
 							}
 						}
 					}
@@ -1033,8 +1005,8 @@ public class CyclingPortalImpl implements CyclingPortal {
 				//Sorts the hashmap values and returns ids in order
 				ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
 				HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
-				for (Integer id : classification.keySet()) {
-					LocalTime theirTime = classification.get(id);
+				for (Integer id : totalRiderTimes.keySet()) {
+					LocalTime theirTime = totalRiderTimes.get(id);
 					riderTimes.add(theirTime);
 					timeRiderDict.put(theirTime, id);
 				}

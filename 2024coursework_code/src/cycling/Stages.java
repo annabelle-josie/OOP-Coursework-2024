@@ -159,14 +159,8 @@ public class Stages implements Serializable {
 		LocalTime[] riderResults = results.get(riderID);
 		LocalTime end = riderResults[riderResults.length -1];
 		LocalTime start = riderResults[0];
-		long time = start.until(end, ChronoUnit.MILLIS);
-		//TODO: For reasons I cannot figure out this adds an hour
-		//I can't fix it, its killing me
-		//It does do it to everything, so it gets cancelled out
-		//So I guess it doesn't matter?
-		LocalTime returnTime = LocalTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault());
-		//System.out.println("Difference for " + riderID + " = " + returnTime);
-		return returnTime;
+		LocalTime timeDiff = end.minusHours(start.getHour()).minusMinutes(start.getMinute()).minusSeconds(start.getSecond()).minusNanos(start.getNano());
+		return timeDiff;
 	}
 
 	public LocalTime getAdjustedTime(int rider){

@@ -559,7 +559,7 @@ people:
 		} catch (IllegalArgumentException e){
 			System.out.println("Name or year wrong");
 		}
-
+		 
 		try{
 			//stage 0
 			LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(10),LocalTime.now().plusSeconds(20), LocalTime.now().plusSeconds(40), LocalTime.now().plusSeconds(50)};
@@ -633,6 +633,7 @@ people:
 		}catch(InvalidCheckpointTimesException e){ 
 			System.out.println("register results");
 		}
+		
 		// try{
 		// 		System.out.println("1" +Arrays.toString(portal.getStageCheckpoints(0)));
 		// 		System.out.println("2" + Arrays.toString(portal.getStageCheckpoints(1)));
@@ -665,22 +666,34 @@ people:
 		// 		System.out.println("ahh");
 		// }
 
+		try {
+			for (int i = 0; i < 6; i++){
+				System.out.println(i + ": " + portal.getRiderAdjustedElapsedTimeInStage(0, i));
+			}
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		System.out.println("\n");
 		try{
-			System.out.println("GC rank " +Arrays.toString(portal.getRidersGeneralClassificationRank(0)));
-			System.out.println("GC rank " +Arrays.toString(portal.getGeneralClassificationTimesInRace(0)));
+			LocalTime[] orderedTimes = portal.getGeneralClassificationTimesInRace(0);
+			int[] orderedId = portal.getRidersGeneralClassificationRank(0);
+			for(int i = 0; i < orderedId.length; i++){
+				System.out.println(orderedId[i] + ": " + orderedTimes[i]);
+			}
 		} catch(IDNotRecognisedException e){
 			System.out.println("Rank broke 1");
 		}
-		try{
-			System.out.println("ranked mountain " +Arrays.toString(portal.getRidersPointsInRace(0)));
-		} catch(IDNotRecognisedException e){
-			System.out.println("Rank broke 2");
-		}
-		try{
-			System.out.println("ranked points " +Arrays.toString(portal.getRidersMountainPointsInRace(0)));
-		} catch(IDNotRecognisedException e){
-			System.out.println("Rank broke 3");
-		}
+		// try{
+		// 	System.out.println("ranked mountain " +Arrays.toString(portal.getRidersPointsInRace(0)));
+		// } catch(IDNotRecognisedException e){
+		// 	System.out.println("Rank broke 2");
+		// }
+		// try{
+		// 	System.out.println("ranked points " +Arrays.toString(portal.getRidersMountainPointsInRace(0)));
+		// } catch(IDNotRecognisedException e){
+		// 	System.out.println("Rank broke 3");
+		// }
 
 
 
