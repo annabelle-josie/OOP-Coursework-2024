@@ -287,7 +287,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 					nextID = 0;
 				} else{
 					nextID = checkpointIDList[checkpointIDList.length-1]+1;
-					System.out.println("next ID" + nextID);
+					//System.out.println("next ID" + nextID);
 				}
 
 
@@ -341,7 +341,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 					nextID = 0;
 				} else{
 					nextID = checkpointIDList[checkpointIDList.length-1]+1;
-					System.out.println("next ID" + nextID);
+					//System.out.println("next ID" + nextID);
 				}
 				listOfCheckpoints.add(new Checkpoints(nextID, stageId, location));
 				//int checkpointID = listOfCheckpoints.get(listOfCheckpoints.size() -1).getCheckpointID();
@@ -662,9 +662,9 @@ public class CyclingPortalImpl implements CyclingPortal {
 				//System.out.println("working");
 				stage.calulateMountainStage();
 				rank = stage.getRank();
-				System.out.println("rank " + rank);
+				//System.out.println("rank " + rank);
 				int[] StageCheckpoints = stage.getCheckpoints();
-				System.out.println("checkpoints" + Arrays.toString(StageCheckpoints));
+				//System.out.println("checkpoints" + Arrays.toString(StageCheckpoints));
 				int[] returnArray = new int[StageCheckpoints.length];
 				for(int i=0; i < StageCheckpoints.length; i++){
 					//System.out.println("working " + i);
@@ -674,7 +674,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 							if(returnArray == null){
 								continue;
 							}else{
-							System.out.println("ids" + Arrays.toString(returnArray));
+							//System.out.println("ids" + Arrays.toString(returnArray));
 							int [] pointArray = checkpoint.getMountainPoints(returnArray.length);
 							//System.out.println("points" + Arrays.toString(pointArray));
 							//System.out.println("ids" + Arrays.toString(returnArray));
@@ -771,8 +771,10 @@ public class CyclingPortalImpl implements CyclingPortal {
 		Boolean found = false;
 		int count = 0;
 		int[] stages = new int[]{};
+		int[] checkpoints = new int[]{};
+		Boolean foundCheckpoint = false;
 		while (!found && count < listOfRaces.size()){
-			if (name == listOfRaces.get(count).getName()){
+			if (name.equals(listOfRaces.get(count).getName())){
 				stages = listOfRaces.get(count).getStages();
 				listOfRaces.remove(listOfRaces.get(count));
 				found = true;
@@ -780,9 +782,30 @@ public class CyclingPortalImpl implements CyclingPortal {
 			count++;	
 		}
 		for(int stage : stages){
-			//removeStageById(stage);	
-		
+			int countStages =0;
+			while (!found && count < listOfStages.size()){
+			//System.out.println(stages);
+			if (stage == listOfStages.get(countStages).getStageID()){
+				checkpoints = listOfStages.get(countStages).getCheckpoints();
+				listOfStages.remove(listOfStages.get(countStages));
+				//System.out.println(Arrays.toString(checkpoints));
+				found = true;
+				}
+			countStages++;
+			}	
+
+		for(int checkpoint : checkpoints){
+			int countCheckpoint = 0;
+			while (!foundCheckpoint && countCheckpoint < listOfCheckpoints.size()){
+				if (checkpoint == listOfCheckpoints.get(countCheckpoint).getCheckpointID()){
+					System.out.println(listOfCheckpoints.get(countCheckpoint).getCheckpointID());
+					listOfCheckpoints.remove(listOfCheckpoints.get(countCheckpoint));
+					foundCheckpoint = true;
+				}
+				countCheckpoint++;
 		}
+		}}
+		
 		
 		if(!found){
 			throw new NameNotRecognisedException();
@@ -801,16 +824,47 @@ public class CyclingPortalImpl implements CyclingPortal {
 	 *         exception.
 	 */
 	public LocalTime[] getGeneralClassificationTimesInRace(int raceId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		return null;
+		int[] riderIDs = getRidersGeneralClassificationRank(raceId);
+		//Gives ordered array of riders
+		//All this needs to do is get their collective times in all the stages
+		HashMap<Integer, LocalTime> ranked = new HashMap<>();
+		for (Races race : listOfRaces) {
+			if (raceId == race.getRaceID() ){
+
+				//Loads all the stages and adds their total times together
+				int[] stagesInRace = race.getStages();
+				for(Stages stage : listOfStages){
+					Boolean contained = false;
+					for(int stageInRace: stagesInRace){
+						if (stageInRace == stage.getStageID()){
+							contained = true;
+						}
+					}
+					if (contained){
+						for(int id : riderIDs){
+							LocalTime time;
+							if (ranked.containsKey(id)){
+								LocalTime timeToAdd = stage.getAdjustedTime(id);
+								time = ranked.get(id).plusHours(timeToAdd.getHour()).plusMinutes(timeToAdd.getMinute()).plusSeconds(timeToAdd.getSecond()).plusNanos(timeToAdd.getNano());
+							} else{
+								time = stage.getAdjustedTime(id);
+							}
+							ranked.put(id, time);
+						}
+					}
+				}
+				LocalTime[] returnTimes = new LocalTime[ranked.size()];
+				int count = 0;
+				for (int id : ranked.keySet()) {
+					returnTimes[count] = ranked.get(id);
+					count++;
+				}
+				return returnTimes;
+			}
+		}
+		throw new IDNotRecognisedException();
 	}
-/**
-	 * Get the overall points of riders in a race.
-	 * @return An array of riders' points (i.e., the sum of their points in all stages
-	 *         of the race), sorted by the total adjusted elapsed time. An empty array if
-	 *         there is no result for any stage in the race. These points should
-	 *         match the riders returned by {@link #getRidersGeneralClassificationRank(int)}.
-	 */
+
 	@Override
 	public int[] getRidersPointsInRace(int raceId) throws IDNotRecognisedException {
 		int current = 0;
@@ -820,11 +874,13 @@ public class CyclingPortalImpl implements CyclingPortal {
 		int[] finished;
 		for (Races race : listOfRaces) {
 			if (raceId== race.getRaceID() ){
-				System.out.println("id" + race.getRaceID());
+				found = true;
+				rank = getRidersGeneralClassificationRank(raceId);
+				//System.out.println("id" + race.getRaceID());
 				found = true;
 				//System.out.println("working");
 				int[] stages = race.getStages();
-				System.out.println("stages " + Arrays.toString(race.getStages()));
+				//System.out.println("stages " + Arrays.toString(race.getStages()));
 				int[] returnArray = new int[stages.length];
 				for(int i=0; i < stages.length; i++){
 					//System.out.println("working " + i);
@@ -852,19 +908,27 @@ public class CyclingPortalImpl implements CyclingPortal {
 								}
 							}
 							}		
-						System.out.println("points in stage " + pointsInStage);
-						
 						}
+						
+					finished = new int[rank.length];
+					int count2 = 0;
+					for (int id : rank) {
+					if(pointsInStage.containsKey(rank[id])){
+						finished[count2] = pointsInStage.get(id);
+					}
+						count2 ++;
+					}
+				return finished;	
 					}
 					
+				if(!found)	{
+				throw new IDNotRecognisedException();
+			}
+					
 				}
-				return finished = new int[]{1,2,3};
+				return finished = new int[]{1,4,3};
 	}
-/**
-	 * sorted by the total adjusted elapsed time.
-	 *     These   points should match the riders returned by
-	 *         {@link #getRidersGeneralClassificationRank(int)}.
-	 */
+
 	@Override
 	public int[] getRidersMountainPointsInRace(int raceId) throws IDNotRecognisedException {
 		int current = 0;
@@ -874,11 +938,12 @@ public class CyclingPortalImpl implements CyclingPortal {
 		int[] finished;
 		for (Races race : listOfRaces) {
 			if (raceId== race.getRaceID() ){
-				System.out.println("id" + race.getRaceID());
+				//System.out.println("id" + race.getRaceID());
 				found = true;
+				rank = getRidersGeneralClassificationRank(raceId);
 				//System.out.println("working");
 				int[] stages = race.getStages();
-				System.out.println("stages " + Arrays.toString(race.getStages()));
+				//System.out.println("stages " + Arrays.toString(race.getStages()));
 				int[] returnArray = new int[stages.length];
 				for(int i=0; i < stages.length; i++){
 					//System.out.println("working " + i);
@@ -897,45 +962,39 @@ public class CyclingPortalImpl implements CyclingPortal {
 									}else
 									current = pointsInStage.get(returnArray[j]);
 									//System.out.println("twice");
-									System.out.println(" current " +current);
+									//System.out.println(" current " +current);
 									pointsInStage.put(returnArray[j],current + pointArray[j]);
 									//int[] returnArray = new int[StageCheckpoints.length];
 								}
-
-						
-								}
-							}
+							
 							}	}	
-						System.out.println("points in stage " + pointsInStage);
-						return finished = new int[]{1,2,3};
-
-						
-					
-				// need th clasification rank to sort this one
-			} 
+							//System.out.println(pointsInStage);
+							finished = new int[rank.length];
+					int count2 = 0;
+					for (int id : rank) {
+					if(pointsInStage.containsKey(rank[id])){
+						finished[count2] = pointsInStage.get(id);
+					}
+						count2 ++;
+					}
+				return finished;
 		}
+			} 
+			}
 			
 			if(!found)	{
 				throw new IDNotRecognisedException();
 			}
 		
+		
+		}
 		return finished = new int[]{};
-			
 		
 	}
 			
-	
-	/**
-	 * Get the general classification rank of riders in a race.
-	 * @return A ranked list of riders' IDs sorted ascending by the sum of their
-	 *         adjusted elapsed times in all stages of the race. That is, the first
-	 *         in this list is the winner (least time). An empty list if there is no
-	 *         result for any stage in the race.
-	*/
 
 	@Override
 	public int[] getRidersGeneralClassificationRank(int raceId) throws IDNotRecognisedException {
-		//TODO: NOT BEEN TESTED!! TEST THIS ONCE PERFECT PORTAL WORKS
 		//For all in race
 		//can get each stage from getAdjustedRank (to give times)
 		// and getRank to get IDs
@@ -948,7 +1007,13 @@ public class CyclingPortalImpl implements CyclingPortal {
 				int[] stagesInRace = race.getStages(); //Get the IDs of all stages
 				Boolean ridersAdded = false;
 				for(Stages stage : listOfStages){
-					if ((Arrays.asList(stagesInRace)).contains(stage.getStageID())){
+					Boolean contained = false;
+					for(int stageInRace: stagesInRace){
+						if (stageInRace == stage.getStageID()){
+							contained = true;
+						}
+					}
+					if (contained){
 						LocalTime[] times = stage.getAdjustedRank();
 						int[] ids = stage.getRank();
 						if (!ridersAdded){
@@ -996,6 +1061,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 	@Override
 	public int[] getRidersPointClassificationRank(int raceId) throws IDNotRecognisedException {
 		// TODO Auto-generated method stub
+		// rider ids for rider points in race
 		return null;
 	}
 /**
@@ -1008,7 +1074,10 @@ public class CyclingPortalImpl implements CyclingPortal {
 	@Override
 	public int[] getRidersMountainPointClassificationRank(int raceId) throws IDNotRecognisedException {
 		// TODO Auto-generated method stub
+		// rider IDS for moutain points in race
+		// can get riders points and gc rank others functions and sort that way?
 		return null;
-	}
+		}
+		}
 
-}
+

@@ -416,11 +416,17 @@ System.out.println("length broke");
 		System.out.println("ID wrong in adjusted");	
 	}
 	try {
-		System.out.println("points" + Arrays.toString(portal1.getRidersPointsInStage(0)));
-	} catch(IDNotRecognisedException e){
+		portal1.removeRaceByName("name");
+		System.out.println("testing");
+	} catch(NameNotRecognisedException e){
 		System.out.println("ahh");
 	}
-	
+	// does this work 
+	try {
+		System.out.println("Checkpoints: " + Arrays.toString(portal1.getStageCheckpoints(0)));
+	} catch (IDNotRecognisedException e) {
+		System.out.println("NO");
+	}
 	// 	assert (portal1.getTeams().length == 1)
 	// 			: "Portal1 should have one team.";
 
@@ -445,17 +451,15 @@ people:
 2 people in team 1
 2 people in team 2
  */
-	public static void perfectPortal(){
-		//TODO: Still causing issues sorry
-		
-		System.out.println("PERFECT PORTAL RUNNING");
+	public static void perfectPortal(){		
+		System.out.println("PERFECT PORTAL RUNNING \n");
 		CyclingPortal portal = new CyclingPortalImpl();
 		try {
 			portal.createRace("a", "full race");
 		} catch (Exception e) {
 			System.out.println("race not created");	
 		}
-		portal.getRaceIds();
+		//portal.getRaceIds();
 		try{
 			portal.addStageToRace(0,"Stage_1", "Flat Stage", 13.0d, LocalDateTime.now(), StageType.FLAT );
 			portal.addStageToRace(0,"Stage_2", "Medium Mountain Stage", 13.0d, LocalDateTime.now(), StageType.MEDIUM_MOUNTAIN);
@@ -510,12 +514,16 @@ people:
 		} catch (InvalidStageTypeException e){
 			System.out.println("stage type issues 1");
 		}
+		try{
+		System.out.println(Arrays.toString(portal.getRaceStages(0)));
+		} catch (IDNotRecognisedException e){
+			System.out.println("oops");
+		}
 
 		try {
 			portal.concludeStagePreparation(0);
 			portal.concludeStagePreparation(1);
 			portal.concludeStagePreparation(2);
-			portal.concludeStagePreparation(3);
 		} catch (IDNotRecognisedException e) {
 			System.out.println("conclude stage 1");
 		} catch(InvalidStageStateException e){
@@ -534,7 +542,7 @@ people:
 			System.out.println("issue with teams 2");		
 		}
 
-		System.out.println(portal.getTeams());
+		//System.out.println(portal.getTeams());
 		try {
 			portal.createRider(0, "a", 2004);
 			portal.createRider(0, "b", 2004);
@@ -625,37 +633,60 @@ people:
 		}catch(InvalidCheckpointTimesException e){ 
 			System.out.println("register results");
 		}
-		try{
-				System.out.println("1" +Arrays.toString(portal.getStageCheckpoints(0)));
-				System.out.println("2" + Arrays.toString(portal.getStageCheckpoints(1)));
-				System.out.println("3" +Arrays.toString(portal.getStageCheckpoints(2)));
-			} catch(IDNotRecognisedException e){
-				System.out.println("Nope, im broken");
-			}
-		try {
-			System.out.println("mountain points for stage 0 are " + Arrays.toString(portal.getRidersMountainPointsInStage(0)));
-			System.out.println("mountain points for stage 1 are " + Arrays.toString(portal.getRidersMountainPointsInStage(1)));
-			System.out.println("mountain points for stage 2 are " + Arrays.toString(portal.getRidersMountainPointsInStage(2)));
-			//System.out.println("mountain points for stage 3 are " + Arrays.toString(portal.getRidersMountainPointsInStage(3)));
-		} catch(IDNotRecognisedException e){
-			System.out.println("ahh");
-		}
+		// try{
+		// 		System.out.println("1" +Arrays.toString(portal.getStageCheckpoints(0)));
+		// 		System.out.println("2" + Arrays.toString(portal.getStageCheckpoints(1)));
+		// 		System.out.println("3" +Arrays.toString(portal.getStageCheckpoints(2)));
+		// 	} catch(IDNotRecognisedException e){
+		// 		System.out.println("Nope, I'm broken");
+		// 	}
+		// try {
+		// 	System.out.println("mountain points for stage 0 are " + Arrays.toString(portal.getRidersMountainPointsInStage(0)));
+		// 	System.out.println("mountain points for stage 1 are " + Arrays.toString(portal.getRidersMountainPointsInStage(1)));
+		// 	System.out.println("mountain points for stage 2 are " + Arrays.toString(portal.getRidersMountainPointsInStage(2)));
+		// 	//System.out.println("mountain points for stage 3 are " + Arrays.toString(portal.getRidersMountainPointsInStage(3)));
+		// } catch(IDNotRecognisedException e){
+		// 	System.out.println("ahh");
+		// }
 		
-		try {
-			System.out.println("races 1  " + portal.getNumberOfStages(0));
+		// try {
+		// 	System.out.println("races 1  " + portal.getNumberOfStages(0));
+		// } catch(IDNotRecognisedException e){
+		// 	System.out.println("ahh");
+		// }
+		// try {
+		// 	System.out.println("races " + Arrays.toString(portal.getRidersMountainPointsInRace(0)));
+		// } catch(IDNotRecognisedException e){
+		// 	System.out.println("ahh");
+		// }
+		// try {
+		// 	System.out.println("rider points " + Arrays.toString(portal.getRidersPointsInRace(0)));
+		// 	} catch(IDNotRecognisedException e){
+		// 		System.out.println("ahh");
+		// }
+
+		try{
+			System.out.println("GC rank " +Arrays.toString(portal.getRidersGeneralClassificationRank(0)));
+			System.out.println("GC rank " +Arrays.toString(portal.getGeneralClassificationTimesInRace(0)));
 		} catch(IDNotRecognisedException e){
-			System.out.println("ahh");
+			System.out.println("Rank broke 1");
 		}
-		try {
-			System.out.println("races " + Arrays.toString(portal.getRidersMountainPointsInRace(0)));
+		try{
+			System.out.println("ranked mountain " +Arrays.toString(portal.getRidersPointsInRace(0)));
 		} catch(IDNotRecognisedException e){
-			System.out.println("ahh");
+			System.out.println("Rank broke 2");
 		}
-		try {
-			System.out.println("races " + Arrays.toString(portal.getRidersPointsInRace(0)));
-			} catch(IDNotRecognisedException e){
-				System.out.println("ahh");
-		}}}
+		try{
+			System.out.println("ranked points " +Arrays.toString(portal.getRidersMountainPointsInRace(0)));
+		} catch(IDNotRecognisedException e){
+			System.out.println("Rank broke 3");
+		}
+
+
+
+		System.out.println("\n PERFECT PORTAL COMPLETE");
+	}
+}
 		
 	
 	// //stage 1

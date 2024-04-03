@@ -246,7 +246,7 @@ public class Stages implements Serializable {
 		// =====
 		adjustedResults.clear();
 		//First Value will always be unchanged
-		adjustedResults.put(0, riderTimes.get(0));
+		adjustedResults.put(timeRiderDict.get(riderTimes.get(0)), riderTimes.get(0));
 		int count = 0;
 		for (int group : groupList) {
 			int idToChange = timeRiderDict.get(riderTimes.get(count+1));
@@ -261,9 +261,9 @@ public class Stages implements Serializable {
 			count++;
 		}	
 
-		for(int id : adjustedResults.keySet()){
-			System.out.println(id + ": " + adjustedResults.get(id));
-		}
+		// for(int id : adjustedResults.keySet()){
+		// 	System.out.println(id + ": " + adjustedResults.get(id));
+		// }
 		
 	}
 	public int[] calculateStagePoints(){
