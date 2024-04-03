@@ -967,6 +967,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int[] getRidersGeneralClassificationRank(int raceId) throws IDNotRecognisedException {
+		//TODO: Does not return an empty list if there are no results!
 		//For all in race
 		//can get each stage from getAdjustedRank (to give times)
 		// and getRank to get IDs
