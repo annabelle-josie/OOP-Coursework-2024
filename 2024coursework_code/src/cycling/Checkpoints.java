@@ -1,51 +1,91 @@
 package cycling;
 import java.util.ArrayList;
-import java.util.Arrays;
+//import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.io.Serializable;
 import java.time.LocalTime;
+
 public class Checkpoints implements Serializable {
-	// 4 attributes
 	private int checkpointID;
-	//private static int nextID;
 	private int stageID ;
 	private Double location;
 	private CheckpointType type;
 	private Double averageGradient;
 	private Double length;
 	ArrayList<Integer> currentCheckpoints = new ArrayList<Integer>();
-	// constructor
+
+	/**
+	 * Creates a new checkpoint
+	 * TODO: is this specific to mountain ones? I feel like it is...
+	 * @param id				ID of the checkpoint to be added
+	 * @param stageId			ID of the stage the checkpoint belongs to
+	 * @param location			The location of the checkpoint
+	 * @param type				The type of checkpoint
+	 * @param averageGradient	The average gradient of the checkpoint
+	 * @param length			The length of the checkpoint
+	 */
 	public Checkpoints(int id, int stageId, Double location, CheckpointType type, Double averageGradient,Double length) {
 		this.checkpointID = id;
-        //currentCheckpoints.add(checkpointID);
 		this.stageID = stageId;
         this.location = location;
         this.type = type;
 		this.averageGradient = averageGradient;
 		this.length = 0.0d;
 	}
+
+	/**
+	 * Alternate constructor for more limited information
+	 * @param id			ID of the checkpoint
+	 * @param stageId		ID of the stage the checkpoint belongs to
+	 * @param location		The location of the checkpoint
+	 */
 	public Checkpoints(int id, int stageId, Double location) {
 		this.checkpointID = id;
 		this.stageID = stageId;
         this.location = location;
 		this.length = 0.0d;
 	}
+
+	/**
+	 * @return ID of the checkpoint
+	 */
 	public int getCheckpointID() {
 		return checkpointID;
 	} 
+
+	/**
+	 * @return  The ID of the stage the checkpoint belongs to
+	 */
 	public int getStageID() {
 		return stageID;
 	}
+
+	/**
+	 * @return The type of checkpoint
+	 */
 	public CheckpointType getType() {
 		return type;
 	}
+
+	/**
+	 * @return The average gradient of the checkpoint
+	 */
 	public Double getAverageGradient() {
 		return averageGradient ;
 	}
+
+	/**
+	 * @return The length of the checkpoint
+	 */
 	public Double getLength() {
 		return length;
 	}
+
+	/**
+	 * The location of the checkpoint
+	 * @return
+	 */
 	public Double getLocation() {
 		return location;
 	}
@@ -70,6 +110,11 @@ public class Checkpoints implements Serializable {
 	// 	return orderedIDs;
 	// }
 
+	/**
+	 * TODO: Amy help please write this doc! I don't know what it does
+	 * @param size
+	 * @return
+	 */
 	public int[] getMountainPoints(int size){
 		// this works if they are in the right order to give riders the right order 
 		// attribute these to riders and sum them 
@@ -103,7 +148,4 @@ public class Checkpoints implements Serializable {
 		}
 		return returnArray;
 	}
-		
-		
-	}
-
+}

@@ -419,11 +419,11 @@ System.out.println("length broke");
 		portal1.removeRaceByName("name");
 		System.out.println("testing");
 	} catch(NameNotRecognisedException e){
-		System.out.println("ahh");
+		System.out.println("name doesnt work");
 	}
 	// does this work 
 	try {
-		System.out.println("Checkpoints: " + Arrays.toString(portal1.getStageCheckpoints(0)));
+		System.out.println("Checkpoints: (should be empty) " + Arrays.toString(portal1.getStageCheckpoints(0)));
 	} catch (IDNotRecognisedException e) {
 		System.out.println("NO");
 	}
@@ -561,8 +561,9 @@ people:
 		}
 		 
 		try{
+			LocalTime[] times;
 			//stage 0
-			LocalTime[] times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(10),LocalTime.now().plusSeconds(20), LocalTime.now().plusSeconds(40), LocalTime.now().plusSeconds(50)};
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(10),LocalTime.now().plusSeconds(20), LocalTime.now().plusSeconds(40), LocalTime.now().plusSeconds(50)};
 			portal.registerRiderResultsInStage(0,0,times);
 			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(5),LocalTime.now().plusSeconds(12), LocalTime.now().plusSeconds(14), LocalTime.now().plusSeconds(15)};
 			portal.registerRiderResultsInStage(0,1,times);
@@ -609,21 +610,37 @@ people:
 			times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(2).plusSeconds(6), LocalTime.now().plusMinutes(5).plusSeconds(20), LocalTime.now().plusMinutes(8).plusSeconds(14),LocalTime.now().plusMinutes(16)};
 			portal.registerRiderResultsInStage(2,6,times);
 
-			// stage 3
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(10),LocalTime.now().plusSeconds(20), LocalTime.now().plusSeconds(40), LocalTime.now().plusSeconds(50)};
-			// portal.registerRiderResultsInStage(3,0,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(5),LocalTime.now().plusSeconds(12), LocalTime.now().plusSeconds(14), LocalTime.now().plusSeconds(15)};
-			// portal.registerRiderResultsInStage(3,1,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(8).plusSeconds(5),LocalTime.now().plusMinutes(9).plusSeconds(45),LocalTime.now().plusMinutes(10).plusSeconds(55), LocalTime.now().plusMinutes(20)};
-			// portal.registerRiderResultsInStage(3,2,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(4).plusSeconds(5), LocalTime.now().plusMinutes(6).plusSeconds(5), LocalTime.now().plusMinutes(12).plusSeconds(5), LocalTime.now().plusMinutes(14).plusSeconds(1)};
-			// portal.registerRiderResultsInStage(3,3,times);
-			// times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(3).plusSeconds(5), LocalTime.now().plusMinutes(13).plusSeconds(5),LocalTime.now().plusMinutes(15).plusSeconds(1).plusNanos(100000)};
-			// portal.registerRiderResultsInStage(3,4,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(3).plusSeconds(5), LocalTime.now().plusMinutes(4).plusSeconds(50), LocalTime.now().plusMinutes(14).plusSeconds(5), LocalTime.now().plusMinutes(18)};
-			// portal.registerRiderResultsInStage(3,5,times);
-			// times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(2).plusSeconds(6), LocalTime.now().plusMinutes(5).plusSeconds(20), LocalTime.now().plusMinutes(8).plusSeconds(14),LocalTime.now().plusMinutes(16)};
-			// portal.registerRiderResultsInStage(3,6,times);
+			//stage 3
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(10),LocalTime.now().plusSeconds(20), LocalTime.now().plusSeconds(40), LocalTime.now().plusSeconds(50)};
+			portal.registerRiderResultsInStage(3,0,times);
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(5),LocalTime.now().plusSeconds(12), LocalTime.now().plusSeconds(14), LocalTime.now().plusSeconds(15)};
+			portal.registerRiderResultsInStage(3,1,times);
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(8).plusSeconds(5),LocalTime.now().plusMinutes(9).plusSeconds(45),LocalTime.now().plusMinutes(10).plusSeconds(55), LocalTime.now().plusMinutes(20)};
+			portal.registerRiderResultsInStage(3,2,times);
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(4).plusSeconds(5), LocalTime.now().plusMinutes(6).plusSeconds(5), LocalTime.now().plusMinutes(12).plusSeconds(5), LocalTime.now().plusMinutes(14).plusSeconds(1)};
+			portal.registerRiderResultsInStage(3,3,times);
+			times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(3).plusSeconds(5), LocalTime.now().plusMinutes(13).plusSeconds(5),LocalTime.now().plusMinutes(15).plusSeconds(1).plusNanos(100000)};
+			portal.registerRiderResultsInStage(3,4,times);
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(3).plusSeconds(5), LocalTime.now().plusMinutes(4).plusSeconds(50), LocalTime.now().plusMinutes(14).plusSeconds(5), LocalTime.now().plusMinutes(18)};
+			portal.registerRiderResultsInStage(3,5,times);
+			times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(2).plusSeconds(6), LocalTime.now().plusMinutes(5).plusSeconds(20), LocalTime.now().plusMinutes(8).plusSeconds(14),LocalTime.now().plusMinutes(16)};
+			portal.registerRiderResultsInStage(3,6,times);
+
+			//stage 4
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(10)};
+			portal.registerRiderResultsInStage(3,0,times);
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(12)};
+			portal.registerRiderResultsInStage(3,1,times);
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(8).plusSeconds(5),LocalTime.now().plusMinutes(9).plusSeconds(45),LocalTime.now().plusMinutes(10).plusSeconds(55), LocalTime.now().plusMinutes(20)};
+			portal.registerRiderResultsInStage(3,2,times);
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(4).plusSeconds(5), LocalTime.now().plusMinutes(6).plusSeconds(5), LocalTime.now().plusMinutes(12).plusSeconds(5), LocalTime.now().plusMinutes(14).plusSeconds(1)};
+			portal.registerRiderResultsInStage(3,3,times);
+			times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(3).plusSeconds(5), LocalTime.now().plusMinutes(13).plusSeconds(5),LocalTime.now().plusMinutes(15).plusSeconds(1).plusNanos(100000)};
+			portal.registerRiderResultsInStage(3,4,times);
+			times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(3).plusSeconds(5), LocalTime.now().plusMinutes(4).plusSeconds(50), LocalTime.now().plusMinutes(14).plusSeconds(5), LocalTime.now().plusMinutes(18)};
+			portal.registerRiderResultsInStage(3,5,times);
+			times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(2).plusSeconds(6), LocalTime.now().plusMinutes(5).plusSeconds(20), LocalTime.now().plusMinutes(8).plusSeconds(14),LocalTime.now().plusMinutes(16)};
+			portal.registerRiderResultsInStage(3,6,times);
 		}catch(IDNotRecognisedException e){
 			System.out.println("register results");
 		}catch(DuplicatedResultException e){
@@ -634,37 +651,37 @@ people:
 			System.out.println("register results");
 		}
 		
-		// try{
-		// 		System.out.println("1" +Arrays.toString(portal.getStageCheckpoints(0)));
-		// 		System.out.println("2" + Arrays.toString(portal.getStageCheckpoints(1)));
-		// 		System.out.println("3" +Arrays.toString(portal.getStageCheckpoints(2)));
-		// 	} catch(IDNotRecognisedException e){
-		// 		System.out.println("Nope, I'm broken");
-		// 	}
-		// try {
-		// 	System.out.println("mountain points for stage 0 are " + Arrays.toString(portal.getRidersMountainPointsInStage(0)));
-		// 	System.out.println("mountain points for stage 1 are " + Arrays.toString(portal.getRidersMountainPointsInStage(1)));
-		// 	System.out.println("mountain points for stage 2 are " + Arrays.toString(portal.getRidersMountainPointsInStage(2)));
-		// 	//System.out.println("mountain points for stage 3 are " + Arrays.toString(portal.getRidersMountainPointsInStage(3)));
-		// } catch(IDNotRecognisedException e){
-		// 	System.out.println("ahh");
-		// }
+		try{
+				System.out.println("1" +Arrays.toString(portal.getStageCheckpoints(0)));
+				System.out.println("2" + Arrays.toString(portal.getStageCheckpoints(1)));
+				System.out.println("3" +Arrays.toString(portal.getStageCheckpoints(2)));
+			} catch(IDNotRecognisedException e){
+				System.out.println("Nope, I'm broken");
+			}
+		try {
+			System.out.println("mountain points for stage 0 are " + Arrays.toString(portal.getRidersMountainPointsInStage(0)));
+			System.out.println("mountain points for stage 1 are " + Arrays.toString(portal.getRidersMountainPointsInStage(1)));
+			System.out.println("mountain points for stage 2 are " + Arrays.toString(portal.getRidersMountainPointsInStage(2)));
+			//System.out.println("mountain points for stage 3 are " + Arrays.toString(portal.getRidersMountainPointsInStage(3)));
+		} catch(IDNotRecognisedException e){
+			System.out.println("ahh");
+		}
 		
-		// try {
-		// 	System.out.println("races 1  " + portal.getNumberOfStages(0));
-		// } catch(IDNotRecognisedException e){
-		// 	System.out.println("ahh");
-		// }
-		// try {
-		// 	System.out.println("races " + Arrays.toString(portal.getRidersMountainPointsInRace(0)));
-		// } catch(IDNotRecognisedException e){
-		// 	System.out.println("ahh");
-		// }
-		// try {
-		// 	System.out.println("rider points " + Arrays.toString(portal.getRidersPointsInRace(0)));
-		// 	} catch(IDNotRecognisedException e){
-		// 		System.out.println("ahh");
-		// }
+		try {
+			System.out.println("races 1  " + portal.getNumberOfStages(0));
+		} catch(IDNotRecognisedException e){
+			System.out.println("ahh");
+		}
+		try {
+			System.out.println("races " + Arrays.toString(portal.getRidersMountainPointsInRace(0)));
+		} catch(IDNotRecognisedException e){
+			System.out.println("ahh");
+		}
+		try {
+			System.out.println("rider points " + Arrays.toString(portal.getRidersPointsInRace(0)));
+			} catch(IDNotRecognisedException e){
+				System.out.println("ahh");
+		}
 
 		try {
 			for (int i = 0; i < 6; i++){
@@ -684,68 +701,34 @@ people:
 		} catch(IDNotRecognisedException e){
 			System.out.println("Rank broke 1");
 		}
-		// try{
-		// 	System.out.println("ranked mountain " +Arrays.toString(portal.getRidersPointsInRace(0)));
-		// } catch(IDNotRecognisedException e){
-		// 	System.out.println("Rank broke 2");
-		// }
-		// try{
-		// 	System.out.println("ranked points " +Arrays.toString(portal.getRidersMountainPointsInRace(0)));
-		// } catch(IDNotRecognisedException e){
-		// 	System.out.println("Rank broke 3");
-		// }
-
+		try{
+			System.out.println("mountain points " +Arrays.toString(portal.getRidersPointsInRace(0)));
+		} catch(IDNotRecognisedException e){
+			System.out.println("Rank broke 2");
+		}
+		try{
+			System.out.println("points " +Arrays.toString(portal.getRidersMountainPointsInRace(0)));
+		} catch(IDNotRecognisedException e){
+			System.out.println("Rank broke 3");
+		}
+		try{
+			System.out.println("ranked mountain points " +Arrays.toString(portal.getRidersMountainPointClassificationRank(0)));
+		} catch(IDNotRecognisedException e){
+			System.out.println("Rank broke 2");
+		}
+		try{
+			System.out.println("ranked points " +Arrays.toString(portal.getRidersPointClassificationRank(0)));
+		} catch(IDNotRecognisedException e){
+			System.out.println("Rank broke 3");
+		}
+		try{
+			System.out.println(portal.getNumberOfStages(0));
+		} catch(IDNotRecognisedException e){
+			System.out.println("stages wrong");
+		}
 
 
 		System.out.println("\n PERFECT PORTAL COMPLETE");
 	}
 }
-		
 	
-	// //stage 1
-			// times = new LocalTime[]{LocalTime.now()};
-			// portal.registerRiderResultsInStage(3,0,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(1),LocalTime.now().plusSeconds(2), LocalTime.now().plusSeconds(4), LocalTime.now().plusSeconds(5)};
-			// portal.registerRiderResultsInStage(3,1,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(1).plusSeconds(5),LocalTime.now().plusMinutes(1).plusSeconds(45),LocalTime.now().plusMinutes(1).plusSeconds(55), LocalTime.now().plusMinutes(2)};
-			// portal.registerRiderResultsInStage(3,2,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(2).plusSeconds(5), LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(2).plusSeconds(1)};
-			// portal.registerRiderResultsInStage(3,3,times);
-			// times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(5).plusSeconds(5), LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(1).plusSeconds(5),LocalTime.now().plusMinutes(2).plusSeconds(1).plusNanos(100000)};
-			// portal.registerRiderResultsInStage(3,4,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(3).plusSeconds(5), LocalTime.now().plusMinutes(12).plusSeconds(50), LocalTime.now().plusMinutes(15).plusSeconds(5), LocalTime.now().plusMinutes(22)};
-			// portal.registerRiderResultsInStage(3,5,times);
-			// times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(8).plusSeconds(6), LocalTime.now().plusMinutes(8).plusSeconds(20), LocalTime.now().plusMinutes(10).plusSeconds(14),LocalTime.now().plusMinutes(16)};
-			// portal.registerRiderResultsInStage(3,6,times);
-
-			// //stage 2
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(2).plusSeconds(55), LocalTime.now().plusMinutes(1).plusSeconds(55), LocalTime.now().plusSeconds(50)};
-			// portal.registerRiderResultsInStage(1,0,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(3),LocalTime.now().plusSeconds(2), LocalTime.now().plusSeconds(5), LocalTime.now().plusSeconds(80)};
-			// portal.registerRiderResultsInStage(1,1,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(1).plusSeconds(5),LocalTime.now().plusMinutes(1).plusSeconds(55), LocalTime.now().plusMinutes(1).plusSeconds(55), LocalTime.now().plusMinutes(2)};
-			// portal.registerRiderResultsInStage(1,2,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(2).plusSeconds(1)};
-			// portal.registerRiderResultsInStage(1,3,times);
-			// times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(1).plusSeconds(5), LocalTime.now().plusMinutes(1).plusSeconds(5),LocalTime.now().plusMinutes(2).plusSeconds(1).plusNanos(100000)};
-			// portal.registerRiderResultsInStage(1,4,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(3).plusSeconds(5), LocalTime.now().plusMinutes(15).plusSeconds(5), LocalTime.now().plusMinutes(22)};
-			// portal.registerRiderResultsInStage(1,5,times);
-			// times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(1).plusSeconds(6),  LocalTime.now().plusMinutes(10).plusSeconds(14),LocalTime.now().plusMinutes(16)};
-			// portal.registerRiderResultsInStage(1,6,times);
-
-			// //stage 3
-			// times = new LocalTime[]{LocalTime.now()};
-			// portal.registerRiderResultsInStage(2,0,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusSeconds(5)};
-			// portal.registerRiderResultsInStage(2,1,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(1).plusSeconds(5)};
-			// portal.registerRiderResultsInStage(2,2,times);
-			// times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(2).plusSeconds(1)};
-			// portal.registerRiderResultsInStage(2,3,times);
-			// times = new LocalTime[]{LocalTime.now(),  LocalTime.now().plusMinutes(2).plusSeconds(1).plusNanos(100000)};
-			// portal.registerRiderResultsInStage(2,4,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(3).plusSeconds(5)};
-			// portal.registerRiderResultsInStage(2,5,times);
-			// times = new LocalTime[]{LocalTime.now(), LocalTime.now().plusMinutes(4)};
-			// portal.registerRiderResultsInStage(2,6,times);

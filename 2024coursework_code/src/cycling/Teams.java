@@ -4,22 +4,18 @@ import java.io.Serializable;
 
 /**
  * Team Class
- * <p>
- * Allows Teams to be created with unique IDs, names and descriptions
- * <p>
- * Also an ArrayList containing the riders who are part of the team
  */
 
 public class Teams implements Serializable{
     private int teamID;
-    //private static int nextID;
     private ArrayList<Integer> riders = new ArrayList<>();
     private String name, description;
 
     /**
-     * Constructor class for rider
-     * <p>
-     * Creates new Team with unique ID
+     * Creates a new team
+     * @param id            The ID of the team
+     * @param name          The name of the team
+     * @param description   A description of the team
      */
     public Teams(int id, String name, String description){
         this.teamID = id;
@@ -29,7 +25,7 @@ public class Teams implements Serializable{
 
 
     /**
-     * @return Unique ID of the team
+     * @return ID of the team
      */
     public int getTeamID(){
         return teamID;
@@ -51,19 +47,17 @@ public class Teams implements Serializable{
 
     /**
      * Adds a rider to the team
-     * <p>
-     * Takes RiderID, checks if that rider exists throws error if not.
-     * Adds RiderID to the ArrayList of Riders in that team
-     * @param riderID                       Integer ID of the rider to be added
-     * @throws IDNotRecognisedException     If a rider with that ID does not exist
+     * @param riderID   ID of the rider to be added
      */
     public void addRider(int riderID){
         riders.add(riderID);
     }
     
+    
     /**
-     * Returns the RiderIDs of Riders in the given team
-     * @return ArrayList of Integers of RiderIDs
+     * Removes a rider of the team
+     * @param riderID       ID of the rider to be removed
+     * @throws IDNotRecognisedException     If the ID given does not correspond to a rider in the team
      */
     public void removeRider(int riderID ) throws IDNotRecognisedException {
 		Boolean worked = riders.remove((Integer)riderID);
@@ -72,6 +66,9 @@ public class Teams implements Serializable{
 		}
     }
 
+    /**
+     * @return The IDs of the riders in a team
+     */
     public int[] getRiders(){
         int[] riderIDArray = new int[riders.size()];
         int count=0;

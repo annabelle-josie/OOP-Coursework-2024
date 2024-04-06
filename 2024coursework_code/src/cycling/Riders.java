@@ -5,23 +5,19 @@ import java.io.Serializable;
 
 /**
  * Rider Class
- * <p>
- * Allows riders to be created, currently accepts name, yearOfBirth and sets the ID
- * <p>
- * Just getters and setters (basically)
  */
 
 public class Riders implements Serializable{
-    //TODO: Is it best programming practice to declare as a group or individually?
-    private int riderID, yearOfBirth;
-    private static int nextID; //Static as independent of instances
+    private int riderID;
+    private int yearOfBirth;
     private String name;
     private static ArrayList<Integer> currentRiders = new ArrayList<Integer>();
-    //TODO: Some way of counting their point totals
 
     /**
-     * Constructor class for rider
-     * Creates new Rider with unique ID
+     * Creates a new rider
+     * @param id            ID of the rider
+     * @param name          Name of the rider
+     * @param yearOfBirth   Year of Birth of the Rider (In the form YYYY)
      */
     public Riders(int id, String name, int yearOfBirth){
         this.riderID = id;
@@ -31,17 +27,11 @@ public class Riders implements Serializable{
     }
 
     /**
-     * @return The unique ID of the rider
+     * @return The ID of the rider
      */
     public int getRiderID(){
         return riderID;
     }
-
-    // public static void isRider(int riderID) throws IDNotRecognisedException{
-    //     if (!currentRiders.contains(riderID)){
-    //         throw new IDNotRecognisedException();
-    //     }
-    // }
 
     /**
      * @return The rider's name
@@ -51,7 +41,7 @@ public class Riders implements Serializable{
     }
 
     /**
-     * @return The birth year of the rider
+     * @return The birth year of the rider (In the form YYYY)
      */
     public int getYearOfBirth(){
         return yearOfBirth;
@@ -69,6 +59,4 @@ public class Riders implements Serializable{
         out = out + this.getYearOfBirth() + " ";
         return out;
     }
-
-    //TODO:Add delete rider to remove from list
 }

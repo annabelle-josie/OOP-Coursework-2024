@@ -37,22 +37,11 @@ public class CyclingPortalImpl implements CyclingPortal {
 			count++;
 		}
 
-		for (int id : raceIdlist) {
-			System.out.println(id);
-		}
+		// for (int id : raceIdlist) {
+		// 	System.out.println(id);
+		// }
 
 		return raceIdlist;
-		// int[] raceIdlist = new int[]{};
-		// for (Races race : listofraces) {
-		// 	int length = raceIdlist.length;
-		// 	int raceID = race.getRaceID();
-		// 	System.out.println(raceID);
-		// 	int[] newArray = new int[length + 1];
-		// 	int i;
-		// 	for (i = 0; i < length; i++)
-		// 		newArray[i] = raceIdlist[i];
-		// 	newArray[length] = raceID;
-		// 	raceIdlist = newArray;
 	}
 
 	@Override
@@ -76,18 +65,15 @@ public class CyclingPortalImpl implements CyclingPortal {
 		
 		listOfRaces.add(new Races(nextID, name, description));
 		int raceID = listOfRaces.get(listOfRaces.size() -1).getRaceID();
-
 		return raceID;
 	}
 
 	@Override
 	public String viewRaceDetails(int raceId) throws IDNotRecognisedException {
-		String s = "";
 		for (Races races : listOfRaces) {
 			System.out.println(races.getRaceID());
 			if (raceId == races.getRaceID()){
-				s = races.raceasstring();
-				return s;
+				return races.raceasstring();
 			}
 		}		
 		throw new IDNotRecognisedException();
@@ -98,21 +84,18 @@ public class CyclingPortalImpl implements CyclingPortal {
 		Boolean found = false;
 		int count = 0;
 		int[] stages = new int[]{};
-		//TODO
 		while (!found && count < listOfRaces.size()){
 			if (raceId == listOfRaces.get(count).getRaceID()){
 				stages = listOfRaces.get(count).getStages();
 				listOfRaces.remove(listOfRaces.get(count));
 				found = true;
 			}
-			count++;	
+			count++;
 		}
 			
 		for(int stage : stages){
 				removeStageById(stage);	
 			}
-			
-		
 		if(!found){
 			throw new IDNotRecognisedException();
 		}
@@ -120,64 +103,56 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int getNumberOfStages(int raceId) throws IDNotRecognisedException {
-		int count = 0;
-		boolean found = false;
-		for (Stages stage : listOfStages) {
-			if (raceId == stage.getRaceID())
-				count += 1;
-				found =true;
+		for (Races race : listOfRaces) {
+			if (raceId == race.getRaceID())
+				return race.getNumberOfStages();
 		}
-		if (!found) {
 			throw new IDNotRecognisedException();
-		}
-		return count;
 	}
 
 	@Override
 	public int addStageToRace(int raceId, String stageName, String description, double length, LocalDateTime startTime,
-			StageType type)
-			throws IDNotRecognisedException, IllegalNameException, InvalidNameException, InvalidLengthException {
-				Boolean found = false;
-				for (Races race : listOfRaces) {
-					if(race.getRaceID() == raceId){
-						found = true;
-					}
-				}
-				if(found == false){
-					throw new IDNotRecognisedException();
-				}
+			StageType type)throws IDNotRecognisedException, IllegalNameException, InvalidNameException, InvalidLengthException {
+		Boolean found = false;
+		for (Races race : listOfRaces) {
+			if(race.getRaceID() == raceId){
+				found = true;
+			}
+		}
+		if(found == false){
+			throw new IDNotRecognisedException();
+		}
 
-				if(stageName == "" || stageName == null || stageName.contains(" ") || stageName.length() > 30){
-					throw new InvalidNameException();
-				}
-				for (Stages stage : listOfStages) {
-					if (stageName == stage.getstageName())
-						throw new IllegalNameException();
-					}	
-				if(length < 5 | length == 0.0d){
-					throw new InvalidLengthException();
-				}
+		if(stageName == "" || stageName == null || stageName.contains(" ") || stageName.length() > 30){
+			throw new InvalidNameException();
+		}
+		for (Stages stage : listOfStages) {
+			if (stageName == stage.getstageName())
+				throw new IllegalNameException();
+			}	
+		if(length < 5){
+			throw new InvalidLengthException();
+		}
 
-				int nextID;	
-				int[] stageIdlist = new int[listOfStages.size()];
-				int count = 0;
-				for (Stages stage : listOfStages) {
-					stageIdlist[count] = stage.getStageID();
-					count++;
-				}
-				if(stageIdlist.length == 0){
-					nextID = 0;
-				} else{
-					nextID = stageIdlist[stageIdlist.length-1]+1;
-				}
+		int nextID;	
+		int[] stageIdlist = new int[listOfStages.size()];
+		int count = 0;
+		for (Stages stage : listOfStages) {
+			stageIdlist[count] = stage.getStageID();
+			count++;
+		}
+		if(stageIdlist.length == 0){
+			nextID = 0;
+		} else{
+			nextID = stageIdlist[stageIdlist.length-1]+1;
+		}
 		
-				listOfStages.add(new Stages(nextID, raceId ,stageName, description,length, startTime,type));
-				//int stageID = listOfStages.get(listOfStages.size() -1).getStageID();
-				for (Races race : listOfRaces) {
-					if (raceId == race.getRaceID())
-						race.setStages(nextID);
-						race.setLength(length);
-				}		
+		listOfStages.add(new Stages(nextID, raceId ,stageName, description,length, startTime,type));
+		for (Races race : listOfRaces) {
+			if (raceId == race.getRaceID())
+				race.setStages(nextID);
+				race.setLength(length);
+		}		
 		return nextID;
 	}
 
@@ -186,6 +161,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 		for (Races races : listOfRaces) {
 			if (raceId == races.getRaceID()){
 				return races.getStages();
+				// check reeturns empty list
 			}
 		}	
 		throw new IDNotRecognisedException();
@@ -193,11 +169,9 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public double getStageLength(int stageId) throws IDNotRecognisedException {
-		double length = 0.0d;
 		for (Stages stage : listOfStages) {
 			if (stageId == stage.getStageID()){
-				length = stage.getlength();
-				return length;
+				return stage.getlength();
 			}
 		}
 		throw new IDNotRecognisedException();
@@ -210,23 +184,28 @@ public class CyclingPortalImpl implements CyclingPortal {
 		int count = 0;
 		int[] checkpoints = new int[]{};
 
-		for (Races races : listOfRaces) {
-			for(int stages : races.getStages()){
-				if (stages == stageId){
-					races.removeStage(stageId);
-					
-				}
-			}
-		}
+		
+
+		Double lengthToRemove = 0d;
 		while (!found && count < listOfStages.size()){
 			if (stageId == listOfStages.get(count).getStageID()){
+				lengthToRemove = listOfStages.get(count).getlength();
 				checkpoints = listOfStages.get(count).getCheckpoints();
 				listOfStages.remove(listOfStages.get(count));
 				System.out.println(Arrays.toString(checkpoints));
 				found = true;
-				}
+			}
 			count++;
-			}	
+		}	
+
+		for (Races races : listOfRaces) {
+			for(int stages : races.getStages()){
+				if (stages == stageId){
+					races.removeStage(stageId);
+					races.setLength(-(lengthToRemove));
+				}
+			}
+		}
 
 		for(int checkpoint : checkpoints){
 			int countCheckpoint = 0;
@@ -238,8 +217,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 				}
 				countCheckpoint++;
 			}
-			
-			}
+		}
 		
 		if(!found){
 			throw new IDNotRecognisedException();
@@ -247,111 +225,90 @@ public class CyclingPortalImpl implements CyclingPortal {
 	}
 
 	@Override
-	public int addCategorizedClimbToStage(int stageId, Double location, CheckpointType type, Double averageGradient,
-			Double length) throws IDNotRecognisedException, InvalidLocationException, InvalidStageStateException,
-			InvalidStageTypeException {
-				Boolean found = false;
-				double maxlength = 0.0d;
-				StageType stagetype = null;
-				String stageState = null;
-				for (Stages stage: listOfStages) {
-					if(stage.getStageID() == stageId){
-						found = true;
-						maxlength = stage.getlength();
-						stageState = stage.getStageState();
-						stagetype = stage.getType();
-
-					}
-				}
-				if(found == false){
-					throw new IDNotRecognisedException();
-				}
-				if (stageState.equals("waiting for results")){
+	public int addCategorizedClimbToStage(int stageId, Double location, CheckpointType type, Double averageGradient,Double length) 
+	throws IDNotRecognisedException, InvalidLocationException, InvalidStageStateException,InvalidStageTypeException {
+		Boolean found = false;
+		for (Stages stage: listOfStages) {
+			if(stage.getStageID() == stageId){
+				found = true;
+				if (stage.getStageState().equals("waiting for results")){
 					throw new InvalidStageStateException();
 				}	
-
-				if(location > maxlength){
+				if(location > stage.getlength()){
 					throw new InvalidLocationException();
 				}
-				if (stagetype == StageType.TT){
+				if (stage.getType() == StageType.TT){
 					throw new InvalidStageTypeException();
 				}
+			}
+		}
+		if(found == false){
+			throw new IDNotRecognisedException();
+		}
+	
+		int nextID;	
+		int[] checkpointIDList = new int[listOfCheckpoints.size()];
+		int count = 0;
+		for (Checkpoints checkpoint : listOfCheckpoints) {
+			checkpointIDList[count] = checkpoint.getCheckpointID();
+			count++;
+		}
+		if(checkpointIDList.length == 0){
+			nextID = 0;
+		} else{
+			nextID = checkpointIDList[checkpointIDList.length-1]+1;
+		}
 
-				int nextID;	
-				int[] checkpointIDList = new int[listOfCheckpoints.size()];
-				int count = 0;
-				for (Checkpoints checkpoint : listOfCheckpoints) {
-					checkpointIDList[count] = checkpoint.getCheckpointID();
-					count++;
-				}
-				if(checkpointIDList.length == 0){
-					nextID = 0;
-				} else{
-					nextID = checkpointIDList[checkpointIDList.length-1]+1;
-					//System.out.println("next ID" + nextID);
-				}
-
-
-				listOfCheckpoints.add(new Checkpoints(nextID, stageId, location, type,averageGradient,length));
-				//int checkpointID = listOfCheckpoints.get(listOfCheckpoints.size()-1).getCheckpointID();
-				for (Stages stage : listOfStages) {
-					if (stageId == stage.getStageID())
-						stage.addCheckpoint(nextID);
-				}		
+		listOfCheckpoints.add(new Checkpoints(nextID, stageId, location, type,averageGradient,length));
+		for (Stages stage : listOfStages) {
+			if (stageId == stage.getStageID())
+				stage.addCheckpoint(nextID);
+		}		
 		return nextID;
 	}
 
 	@Override
-	public int addIntermediateSprintToStage(int stageId, double location) throws IDNotRecognisedException,
-			InvalidLocationException, InvalidStageStateException, InvalidStageTypeException {
-				Boolean found = false;
-				double maxlength = 0.0d;
-				StageType stagetype = null;
-				String stageState = null;
-				for (Stages stage: listOfStages) {
-					if(stage.getStageID() == stageId){
-						found = true;
-						maxlength = stage.getlength();
-						stageState = stage.getStageState();
-						stagetype = stage.getType();
-
-					}
-				}
-				if(found == false){
-					throw new IDNotRecognisedException();
-				}
-				if (stageState.equals("waiting for results")){
+	public int addIntermediateSprintToStage(int stageId, double location) throws IDNotRecognisedException, InvalidLocationException, 
+	InvalidStageStateException, InvalidStageTypeException {
+		Boolean found = false;
+		for (Stages stage: listOfStages) {
+			if(stage.getStageID() == stageId){
+				found = true;
+				if (stage.getStageState().equals("waiting for results")){
 					throw new InvalidStageStateException();
 				}	
-
-				if(location > maxlength){
+				if(location > stage.getlength()){
 					throw new InvalidLocationException();
 				}
-				if (stagetype == StageType.TT){
+				if (stage.getType() == StageType.TT){
 					throw new InvalidStageTypeException();
 				}
+			}
+		}
+		if(found == false){
+			throw new IDNotRecognisedException();
+		}
 				
-				int nextID;	
-				int[] checkpointIDList = new int[listOfCheckpoints.size()];
-				int count = 0;
-				for (Checkpoints checkpoint : listOfCheckpoints) {
-					checkpointIDList[count] = checkpoint.getCheckpointID();
-					count++;
-				}
-				if(checkpointIDList.length == 0){
-					nextID = 0;
-				} else{
-					nextID = checkpointIDList[checkpointIDList.length-1]+1;
+		int nextID;	
+		int[] checkpointIDList = new int[listOfCheckpoints.size()];
+		int count = 0;
+		for (Checkpoints checkpoint : listOfCheckpoints) {
+			checkpointIDList[count] = checkpoint.getCheckpointID();
+			count++;
+		}
+		if(checkpointIDList.length == 0){
+			nextID = 0;
+		} else{
+			nextID = checkpointIDList[checkpointIDList.length-1]+1;
 					//System.out.println("next ID" + nextID);
-				}
-				listOfCheckpoints.add(new Checkpoints(nextID, stageId, location));
+		}
+		listOfCheckpoints.add(new Checkpoints(nextID, stageId, location));
 				//int checkpointID = listOfCheckpoints.get(listOfCheckpoints.size() -1).getCheckpointID();
-				for (Stages stage : listOfStages) {
-					if (stageId == stage.getStageID())
-						stage.addCheckpoint(nextID);
-				}		
+		for (Stages stage : listOfStages) {
+			if (stageId == stage.getStageID())
+				stage.addCheckpoint(nextID);
+		}		
 		return nextID;
-
 	}
 
 	@Override
@@ -362,6 +319,9 @@ public class CyclingPortalImpl implements CyclingPortal {
 			for(int checkpoint : stage.getCheckpoints()){
 				if (checkpoint == checkpointId){
 					stage.removeCheckpoint(checkpointId);
+					if (stage.getStageState().equals("waiting for results")){
+						throw new InvalidStageStateException();
+					}
 				}
 			}
 		}
@@ -376,15 +336,12 @@ public class CyclingPortalImpl implements CyclingPortal {
 		if(!found){
 			throw new IDNotRecognisedException();
 		}
-
 	}
 
 	@Override
 	public void concludeStagePreparation(int stageId) throws IDNotRecognisedException, InvalidStageStateException {
-		Boolean found = false;
 		for (Stages stages : listOfStages) {
 			if (stageId == stages.getStageID()){
-				found = true;
 				if (stages.getStageState().equals("waiting for results")){
 					throw new InvalidStageStateException();
 				} else{
@@ -392,9 +349,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 				}
 			}
 		}
-		if (!found){
-			throw new IDNotRecognisedException();
-		}
+		throw new IDNotRecognisedException();
 	}
 
 	@Override
@@ -406,7 +361,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 			}
 		}	
 		throw new IDNotRecognisedException();
-		}
+	}
 
 	@Override
 	public int createTeam(String name, String description) throws IllegalNameException, InvalidNameException {
@@ -417,7 +372,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 			if (name == teams.getName())
 				throw new IllegalNameException();
 		}	
-		
 
 		int nextID;	
 		int[] teamIDList = new int[listOfTeams.size()];
@@ -434,7 +388,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 		listOfTeams.add(new Teams(nextID, name, description));
 		
-		return listOfTeams.get(listOfTeams.size()-1).getTeamID();
+		return nextID;
 	}
 
 	@Override
@@ -451,7 +405,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 		if(!found){
 			throw new IDNotRecognisedException();
 		}
-				
 	}
 
 	@Override
@@ -463,9 +416,9 @@ public class CyclingPortalImpl implements CyclingPortal {
 			count++;
 		}
 
-		for (int id : teamIdlist) {
-			System.out.println(id);
-		}
+		// for (int id : teamIdlist) {
+		// 	System.out.println(id);
+		// }
 
 		return teamIdlist;
 	}
@@ -482,43 +435,46 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int createRider(int teamID, String name, int yearOfBirth)
-			throws IDNotRecognisedException, IllegalArgumentException {
-				if(name == "" || name == null || yearOfBirth < 1900){
-					throw new IllegalArgumentException();
-				}
+		throws IDNotRecognisedException, IllegalArgumentException {
+		if(name == "" || name == null || yearOfBirth < 1900){
+			throw new IllegalArgumentException();
+		}
 
-				int nextID;	
-				int[] riderIDList = new int[listOfRiders.size()];
-				int count = 0;
-				for (Riders rider : listOfRiders) {
-					riderIDList[count] = rider.getRiderID();
-					count++;
-				}
-				if(riderIDList.length == 0){
-					nextID = 0;
-				} else{
-					nextID = riderIDList[riderIDList.length-1]+1;
-				}
+		int nextID;	
+		int[] riderIDList = new int[listOfRiders.size()];
+		int count = 0;
+		for (Riders rider : listOfRiders) {
+			riderIDList[count] = rider.getRiderID();
+			count++;
+		}
+		if(riderIDList.length == 0){
+			nextID = 0;
+		} else{
+			nextID = riderIDList[riderIDList.length-1]+1;
+		}
 				
-				listOfRiders.add(new Riders(nextID, name, yearOfBirth));
-				int riderID = listOfRiders.get(listOfRiders.size()-1).getRiderID();
+		listOfRiders.add(new Riders(nextID, name, yearOfBirth));
+		int riderID = listOfRiders.get(listOfRiders.size()-1).getRiderID();
 				
-				Boolean found = false;
-				for (Teams team : listOfTeams) {
-					if(teamID == team.getTeamID()){
-						team.addRider(riderID);
-						found = true;
-					}
-				}
-				if (found == false){
-					throw new IDNotRecognisedException();
-				}
-				return riderID;
+		Boolean found = false;
+		for (Teams team : listOfTeams) {
+			if(teamID == team.getTeamID()){
+				//TODO should it be next id?
+				team.addRider(riderID);
+				found = true;
+			}
+		}
+		if (found == false){
+			throw new IDNotRecognisedException();
+		}
+		return riderID;
 	}
 
 	@Override
 	public void removeRider(int riderId) throws IDNotRecognisedException {
 		//Remove from team and from list
+		//TODO When a rider is removed from the platform, all of its results
+		// should be also removed. Race results must be updated.
 		
 		//Remove from team
 		for (Teams teams : listOfTeams) {
@@ -559,7 +515,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 				stageFound = true;
 				numberOfCheckpoints = (stage.getCheckpoints()).length;
 				if (!(stage.getStageState().equals("waiting for results"))){
-					System.out.println("why are you broken");
 					throw new InvalidStageStateException();
 				} else {
 		// if rider times is not empty execption else add the times 
@@ -574,8 +529,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 		if((numberOfCheckpoints+2) != checkpoints.length){
 			throw new InvalidCheckpointTimesException();
 		}
-
-		
 	}
 			
 
@@ -583,11 +536,11 @@ public class CyclingPortalImpl implements CyclingPortal {
 	public LocalTime[] getRiderResultsInStage(int stageId, int riderId) throws IDNotRecognisedException {
 		for (Stages stage : listOfStages){
 			if (stageId == stage.getStageID()){
+				//TODO check if it retursn an empty array if no results
 				return(stage.getRiderTimes(riderId));
 			}
 		}
 		throw new IDNotRecognisedException();
-		
 	}
 
 	@Override
@@ -597,6 +550,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 				stage.calculateAdjustment();
 				for(Riders rider : listOfRiders){
 					if (riderId == rider.getRiderID()){
+						// TODO returns null if no result for that rider 
 						return stage.getAdjustedTime(rider.getRiderID());
 					}
 				}
@@ -608,39 +562,43 @@ public class CyclingPortalImpl implements CyclingPortal {
 	@Override
 	public void deleteRiderResultsInStage(int stageId, int riderId) throws IDNotRecognisedException {
 		// create as a method in stage and remove rider results for that rider in the rider resutls variable
-		for (Stages stage : listOfStages) {
-			if (stageId == stage.getStageID() ){
+		for (Stages stage : listOfStages){
+			if (stageId == stage.getStageID()){
 					stage.removeRider(riderId);
+					break;
 				}
 			}
-		}
+		throw new IDNotRecognisedException();
+	}
 		
 	@Override
 	public int[] getRidersRankInStage(int stageId) throws IDNotRecognisedException {
-		for (Stages stage : listOfStages) {
-			if (stageId == stage.getStageID() ){
-					return(stage.getRank());
-				}
+		for (Stages stage : listOfStages){
+			if (stageId == stage.getStageID()){
+				// TODO should return empty list if no reuslt for stage
+				return(stage.getRank());
 			}
+		}
 		throw new IDNotRecognisedException();
 	}
 	
 	@Override
 	public LocalTime[] getRankedAdjustedElapsedTimesInStage(int stageId) throws IDNotRecognisedException {
 		for (Stages stage : listOfStages) {
-			if (stageId == stage.getStageID() ){
-					return(stage.getAdjustedRank());
-				}
+			if (stageId == stage.getStageID()){
+				// TODO should return empty list if no reuslt for stage
+				return(stage.getAdjustedRank());
 			}
+		}
 		throw new IDNotRecognisedException();
 	}
 	
 	@Override
 	public int[] getRidersPointsInStage(int stageId) throws IDNotRecognisedException {
-		// works!!
-		for (Stages stage : listOfStages) {
-			if (stageId == stage.getStageID() ){
-					return stage.calculateStagePoints();
+		for (Stages stage : listOfStages){
+			if (stageId == stage.getStageID()){
+				// TODO should return empty list if no reuslt for stage
+				return stage.calculateStagePoints();
 			}
 		}
 		throw new IDNotRecognisedException();
@@ -650,68 +608,47 @@ public class CyclingPortalImpl implements CyclingPortal {
 	@Override
 	public int[] getRidersMountainPointsInStage(int stageId) throws IDNotRecognisedException {
 		int current = 0;
-		boolean found = false;
-		int[] rank = new int[]{};
 		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
 		int[] finished;
-		for (Stages stage : listOfStages) {
-			if (stageId == stage.getStageID() ){
-				found = true;
-				//System.out.println("working");
+		for (Stages stage : listOfStages){
+			if (stageId == stage.getStageID()){
 				stage.calulateMountainStage();
-				rank = stage.getRank();
-				//System.out.println("rank " + rank);
+				int[] rank = stage.getRank();
 				int[] StageCheckpoints = stage.getCheckpoints();
-				//System.out.println("checkpoints" + Arrays.toString(StageCheckpoints));
-				int[] returnArray = new int[StageCheckpoints.length];
+				//int[] returnArray = new int[StageCheckpoints.length];
 				for(int i=0; i < StageCheckpoints.length; i++){
-					//System.out.println("working " + i);
 					for (Checkpoints checkpoint :listOfCheckpoints) {
 						if (checkpoint.getCheckpointID() == StageCheckpoints[i]){
-							returnArray = stage.getRankedCheckpoint(checkpoint.getCheckpointID());
+							int[] returnArray = stage.getRankedCheckpoint(checkpoint.getCheckpointID());
 							if(returnArray == null){
 								continue;
 							}else{
-							//System.out.println("ids" + Arrays.toString(returnArray));
-							int [] pointArray = checkpoint.getMountainPoints(returnArray.length);
-							//System.out.println("points" + Arrays.toString(pointArray));
-							//System.out.println("ids" + Arrays.toString(returnArray));
-							for(int j = 0; j< pointArray.length; j++){
-								if(pointsInStage.get(returnArray[j])== null){
-									current = 0;
-								} else 
-									current = pointsInStage.get(returnArray[j]);
-									pointsInStage.put(returnArray[j],current + pointArray[j]);
-								
-							}
-							//System.out.println(pointsInStage);
-							//System.out.println("rank " + Arrays.toString(rank));
-							}	}		
+								int[] pointArray = checkpoint.getMountainPoints(returnArray.length);
+								for(int j = 0; j< pointArray.length; j++){
+									if(pointsInStage.get(returnArray[j])== null){
+										current = 0;
+									}else 
+										current = pointsInStage.get(returnArray[j]);
+										pointsInStage.put(returnArray[j],current + pointArray[j]);
+								}
+							}	
+						}		
 							// match the points to the iDS each time and record the id and
-							// add points each time for that iD somehow
-						
-
-						}
+							// add points each time for that iD 
 					}
+				}
 				finished = new int[rank.length];
-				int count2 = 0;
+				int count = 0;
 				for (int id : rank) {
 					if(pointsInStage.containsKey(rank[id])){
-						finished[count2] = pointsInStage.get(id);
+						finished[count] = pointsInStage.get(id);
 					}
-						count2 ++;
-					}
-			return finished;
+					count ++;
+				}
+				return finished;
 			} 
 		}
-			
-			if(!found)	{
-				throw new IDNotRecognisedException();
-			}
-		
-		return finished = new int[]{};
-			
-		
+		throw new IDNotRecognisedException();
 	}
 		
 	
@@ -753,62 +690,54 @@ public class CyclingPortalImpl implements CyclingPortal {
 		listOfCheckpoints = (ArrayList<Checkpoints>) readStream.readObject();
     	readStream.close();
 		
-		// for (Races race : listOfRaces) {
-		// 	System.out.println(Arrays.toString(race.checkThis()));
-		// }
-		// for (Stages stage : listOfStages) {
-		// 	System.out.println(stage.getStageState());
-		// }
-
 		//Staic Attributes are not serialisable, so we might need to do something about the ID trackers here!
 
 	}
 
 	@Override
 	public void removeRaceByName(String name) throws NameNotRecognisedException {
-		Boolean found = false;
+		Boolean foundRace = false;
 		int count = 0;
 		int[] stages = new int[]{};
 		int[] checkpoints = new int[]{};
-		Boolean foundCheckpoint = false;
-		while (!found && count < listOfRaces.size()){
+		while (!foundRace && count < listOfRaces.size()){
 			if (name.equals(listOfRaces.get(count).getName())){
 				stages = listOfRaces.get(count).getStages();
 				listOfRaces.remove(listOfRaces.get(count));
-				found = true;
+				foundRace = true;
 			}
 			count++;	
 		}
 		for(int stage : stages){
+			boolean foundStage = false;
 			int countStages =0;
-			while (!found && count < listOfStages.size()){
-			//System.out.println(stages);
-			if (stage == listOfStages.get(countStages).getStageID()){
-				checkpoints = listOfStages.get(countStages).getCheckpoints();
-				listOfStages.remove(listOfStages.get(countStages));
-				//System.out.println(Arrays.toString(checkpoints));
-				found = true;
+			while (!foundStage && count < listOfStages.size()){
+				if (stage == listOfStages.get(countStages).getStageID()){
+					checkpoints = listOfStages.get(countStages).getCheckpoints();
+					listOfStages.remove(listOfStages.get(countStages));
+					foundStage = true;
 				}
-			countStages++;
+				countStages++;
 			}	
 
-		for(int checkpoint : checkpoints){
-			int countCheckpoint = 0;
-			while (!foundCheckpoint && countCheckpoint < listOfCheckpoints.size()){
-				if (checkpoint == listOfCheckpoints.get(countCheckpoint).getCheckpointID()){
-					System.out.println(listOfCheckpoints.get(countCheckpoint).getCheckpointID());
-					listOfCheckpoints.remove(listOfCheckpoints.get(countCheckpoint));
-					foundCheckpoint = true;
+			for(int checkpoint : checkpoints){
+				Boolean foundCheckpoint = false;
+				int countCheckpoint = 0;
+				while (!foundCheckpoint && countCheckpoint < listOfCheckpoints.size()){
+					if (checkpoint == listOfCheckpoints.get(countCheckpoint).getCheckpointID()){
+						System.out.println(listOfCheckpoints.get(countCheckpoint).getCheckpointID());
+						listOfCheckpoints.remove(listOfCheckpoints.get(countCheckpoint));
+						foundCheckpoint = true;
+					}
+					countCheckpoint++;
 				}
-				countCheckpoint++;
+			}
 		}
-		}}
 		
 		
-		if(!found){
+		if(!foundRace){
 			throw new NameNotRecognisedException();
 		}
-
 	}
 	/**
 	 * Get the general classification times of riders in a race.
@@ -839,135 +768,111 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int[] getRidersPointsInRace(int raceId) throws IDNotRecognisedException {
+		System.out.println(("I AM RUNNING"));
 		int current = 0;
-		boolean found = false;
-		int[] rank = new int[]{};
 		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
 		int[] finished;
-		for (Races race : listOfRaces) {
-			if (raceId== race.getRaceID() ){
-				found = true;
-				rank = getRidersGeneralClassificationRank(raceId);
-				//System.out.println("id" + race.getRaceID());
-				found = true;
-				//System.out.println("working");
+		for (Races race : listOfRaces){
+			if (raceId== race.getRaceID()){
+				System.out.println(("Reached Flag 2"));
+				int[] rank = getRidersGeneralClassificationRank(raceId);
 				int[] stages = race.getStages();
-				//System.out.println("stages " + Arrays.toString(race.getStages()));
 				int[] returnArray = new int[stages.length];
 				for(int i=0; i < stages.length; i++){
-					//System.out.println("working " + i);
-					for (Stages stage :listOfStages) {
+					for (Stages stage :listOfStages){
 						if (stage.getStageID() == stages[i]){
-							int [] pointArray = getRidersPointsInStage(stage.getStageID());
+							System.out.println(("Reached Flag 3"));
+							int[] pointArray = getRidersPointsInStage(stage.getStageID());
 							returnArray = stage.getRank();
+							if (stage.getResultsSize() == 0){
+								System.out.println("Reached Flag 4");
+								//TODO:Time trails break this algorithm. Kinda sorry have fun fixing
+								return finished = new int[]{};
+							}
 							if(returnArray == null){
+								System.out.println("Reached Flag 5");
 								continue;
 							}else{
-								//System.out.println("points races " + i + Arrays.toString(pointArray)); //System.out.println("ids" + Arrays.toString(returnArray));
+								System.out.println("Reached Flag 6");
 								for(int j = 0; j< pointArray.length; j++){
 									if(pointsInStage.get(returnArray[j]) == null){
 										current = 0;
-										//System.out.println("once");
 									}else
-									current = pointsInStage.get(returnArray[j]);
-									//System.out.println("twice");
-									//System.out.println(" current " +current);
-									pointsInStage.put(returnArray[j],current + pointArray[j]);
-									//int[] returnArray = new int[StageCheckpoints.length];
-								}
-
-						
+										current = pointsInStage.get(returnArray[j]);
+										pointsInStage.put(returnArray[j],current + pointArray[j]);
 								}
 							}
-							}		
+							
 						}
-						
-					finished = new int[rank.length];
-					int count2 = 0;
-					for (int id : rank) {
-					if(pointsInStage.containsKey(rank[id])){
-						finished[count2] = pointsInStage.get(id);
-					}
-						count2 ++;
-					}
-				return finished;	
-					}
-					
-				if(!found)	{
-				throw new IDNotRecognisedException();
-			}
-					
+					}		
 				}
-				return finished = new int[]{1,4,3};
+				
+				finished = new int[rank.length];
+				System.out.println("Reached Flag 7");
+				int count = 0;
+				for (int id : rank) {
+					if(pointsInStage.containsKey(rank[id])){
+						finished[count] = pointsInStage.get(id);
+					}
+					count ++;
+				}
+				System.out.println("here" + Arrays.toString(finished));
+				return finished;	
+			}	
+		}
+		throw new IDNotRecognisedException();
 	}
 
 	@Override
 	public int[] getRidersMountainPointsInRace(int raceId) throws IDNotRecognisedException {
 		int current = 0;
-		boolean found = false;
-		int[] rank = new int[]{};
 		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
 		int[] finished;
 		for (Races race : listOfRaces) {
 			if (raceId== race.getRaceID() ){
-				//System.out.println("id" + race.getRaceID());
-				found = true;
-				rank = getRidersGeneralClassificationRank(raceId);
-				//System.out.println("working");
+				int[] rank = getRidersGeneralClassificationRank(raceId);
 				int[] stages = race.getStages();
-				//System.out.println("stages " + Arrays.toString(race.getStages()));
 				int[] returnArray = new int[stages.length];
 				for(int i=0; i < stages.length; i++){
 					//System.out.println("working " + i);
 					for (Stages stage :listOfStages) {
 						if (stage.getStageID() == stages[i]){
 							int [] pointArray = getRidersMountainPointsInStage(stage.getStageID());
+							if (stage.getResultsSize() == 0){
+								return finished = new int[]{};
+							}
 							returnArray = stage.getRank();
 							if(returnArray == null){
 								continue;
 							}else{
-								//System.out.println("points races " + i + Arrays.toString(pointArray)); //System.out.println("ids" + Arrays.toString(returnArray));
 								for(int j = 0; j< pointArray.length; j++){
 									if(pointsInStage.get(returnArray[j]) == null){
 										current = 0;
-										//System.out.println("once");
 									}else
-									current = pointsInStage.get(returnArray[j]);
-									//System.out.println("twice");
-									//System.out.println(" current " +current);
-									pointsInStage.put(returnArray[j],current + pointArray[j]);
-									//int[] returnArray = new int[StageCheckpoints.length];
+										current = pointsInStage.get(returnArray[j]);
+										pointsInStage.put(returnArray[j],current + pointArray[j]);
 								}
-							
-							}	}	
-							//System.out.println(pointsInStage);
-							finished = new int[rank.length];
-					int count2 = 0;
+							}	
+						}		
+					finished = new int[rank.length];
+					int count = 0;
 					for (int id : rank) {
-					if(pointsInStage.containsKey(rank[id])){
-						finished[count2] = pointsInStage.get(id);
+						if(pointsInStage.containsKey(rank[id])){
+							finished[count] = pointsInStage.get(id);
+						}
+						count ++;
 					}
-						count2 ++;
+					return finished;
 					}
-				return finished;
-		}
-			} 
+				} 	
 			}
-			
-			if(!found)	{
-				throw new IDNotRecognisedException();
-			}
-		
-		
 		}
-		return finished = new int[]{};
-		
+		throw new IDNotRecognisedException();
 	}
 			
 
 	@Override
 	public int[] getRidersGeneralClassificationRank(int raceId) throws IDNotRecognisedException {
-		//TODO: Does not return an empty list if there are no results!
 		//For all in race
 		//can get each stage from getAdjustedRank (to give times)
 		// and getRank to get IDs
@@ -975,7 +880,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 		totalRiderTimes.clear();
 		for (Races race : listOfRaces) {
 			if (raceId == race.getRaceID() ){
-
 				//Loads all the stages and adds their total times together
 				int[] stagesInRace = race.getStages(); //Get the IDs of all stages
 				Boolean ridersAdded = false;
@@ -989,15 +893,17 @@ public class CyclingPortalImpl implements CyclingPortal {
 					if (contained){
 						LocalTime[] times = stage.getAdjustedRank();
 						int[] ids = stage.getRank();
-						if (!ridersAdded){
-							for(int id : ids){
-								totalRiderTimes.put(id, times[id]);
-							}
-							ridersAdded = true;
-						} else{
-							for(int id : ids){
-								LocalTime time = totalRiderTimes.get(id);
-								totalRiderTimes.put(id, times[id].plusHours(time.getHour()).plusMinutes(time.getMinute()).plusSeconds(time.getSecond()).plusNanos(time.getNano()));
+						if (times.length != 0){
+							if (!ridersAdded){
+								for(int id : ids){
+									totalRiderTimes.put(id, times[id]);
+								}
+								ridersAdded = true;
+							} else{
+								for(int id : ids){
+									LocalTime time = totalRiderTimes.get(id);
+									totalRiderTimes.put(id, times[id].plusHours(time.getHour()).plusMinutes(time.getMinute()).plusSeconds(time.getSecond()).plusNanos(time.getNano()));
+								}
 							}
 						}
 					}
@@ -1019,38 +925,90 @@ public class CyclingPortalImpl implements CyclingPortal {
 					count++;
 				}
 				return orderedIDs;
-
 			}
 		}
 		throw new IDNotRecognisedException();
 	}
-/**
-	 * Get the ranked list of riders based on the points classification in a race.
-	 * @return A ranked list of riders' IDs sorted descending by the sum of their
-	 *         points in all stages of the race. That is, the first in this list is
-	 *         the winner (more points). An empty list if there is no result for any
-	 *         stage in the race.
-	 */
+
+	
 	@Override
 	public int[] getRidersPointClassificationRank(int raceId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		// rider ids for rider points in race
-		return null;
+		for(Races race : listOfRaces){
+			if(race.getRaceID() == raceId){
+				int[] points;
+				try{
+					points = getRidersPointsInRace(raceId);
+				} catch(Exception e){
+					throw new IDNotRecognisedException();
+				}
+				int[] ranks = getRidersGeneralClassificationRank(raceId);
+				
+				ArrayList<Integer> pointsinList = new ArrayList<Integer>(); 
+				HashMap<Integer, Integer> pointsandranks = new HashMap<>(); 
+				ArrayList<Integer> ranksUsed = new ArrayList<Integer>();
+				for(int i=0; i<ranks.length; i++){
+					pointsandranks.put(ranks[i], points[i]);
+					pointsinList.add(points[i]);
+				}
+		
+				Collections.sort(pointsinList);
+				Collections.reverse(pointsinList);
+	
+				int[] orderedIDs = new int[pointsinList.size()];
+				int count = 0;
+				for(Integer point : pointsinList){
+					for( int j =0; j<pointsinList.size(); j++){
+						Integer current = orderedIDs[count];
+						if(point == points[j] && current.equals(0) && !ranksUsed.contains(ranks[j])){
+							orderedIDs[count] = ranks[j];
+							ranksUsed.add(ranks[j]);
+						}
+					}
+					count++;
+				}
+				return orderedIDs;
+			}
+		}
+		throw new IDNotRecognisedException();
 	}
-/**
-	 * Get the ranked list of riders based on the mountain classification in a race.
-	 * @return A ranked list of riders' IDs sorted descending by the sum of their
-	 *         mountain points in all stages of the race. That is, the first in this
-	 *         list is the winner (more points). An empty list if there is no result
-	 *         for any stage in the race.
-	*/
+
+	
 	@Override
 	public int[] getRidersMountainPointClassificationRank(int raceId) throws IDNotRecognisedException {
-		// TODO Auto-generated method stub
-		// rider IDS for moutain points in race
-		// can get riders points and gc rank others functions and sort that way?
-		return null;
+		for(Races race : listOfRaces){
+			if(race.getRaceID() == raceId){
+				int[] points = getRidersMountainPointsInRace(raceId);
+				int[] ranks = getRidersGeneralClassificationRank(raceId);
+		
+				ArrayList<Integer> pointsinList = new ArrayList<Integer>(); 
+				HashMap<Integer, Integer> pointsandranks = new HashMap<>(); 
+				ArrayList<Integer> ranksUsed = new ArrayList<Integer>();
+				for(int i=0; i<ranks.length; i++){
+					pointsandranks.put(ranks[i], points[i]);
+					pointsinList.add(points[i]);
+				}
+		
+				Collections.sort(pointsinList);
+				Collections.reverse(pointsinList);
+	
+				int[] orderedIDs = new int[pointsinList.size()];
+				int count = 0;
+				for(Integer point : pointsinList){
+					for( int j =0; j<pointsinList.size(); j++){
+						Integer current = orderedIDs[count];
+						if(point == points[j] && current.equals(0) && !ranksUsed.contains(ranks[j])){
+							orderedIDs[count] = ranks[j];
+							ranksUsed.add(ranks[j]);
+						}
+					}
+					count++;
+				}
+				return orderedIDs;
+			}
 		}
-		}
+		throw new IDNotRecognisedException();
+	}
+}
+		
 
 
