@@ -561,7 +561,7 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public void deleteRiderResultsInStage(int stageId, int riderId) throws IDNotRecognisedException {
-		// create as a method in stage and remove rider results for that rider in the rider resutls variable
+		// TODO create as a method in stage and remove rider results for that rider in the rider resutls variable
 		for (Stages stage : listOfStages){
 			if (stageId == stage.getStageID()){
 					stage.removeRider(riderId);
