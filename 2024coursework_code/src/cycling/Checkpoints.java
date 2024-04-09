@@ -3,6 +3,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.io.Serializable;
 
+/**
+ * Checkpoints stores the information relevent to a given checkpoint
+ * @author Amy Lewis and Annabelle Ronald
+ * @version 1.0
+ */
 public class Checkpoints implements Serializable {
 	private int checkpointID;
 	private int stageID;
@@ -93,10 +98,7 @@ public class Checkpoints implements Serializable {
 	 * @return list of the mountain points achieved for that checkpoint
 	 */
 	public int[] getMountainPoints(int size){
-		// this works if they are in the right order to give riders the right order 
-		// attribute these to riders and sum them 
 		ArrayList<Integer> listOfPoints = new ArrayList<>();
-		// use rank in stage to get the order of rider in stage
 		if(type == CheckpointType.C1){
 			Collections.addAll(listOfPoints, 1);
 		}else if(type == CheckpointType.C2){
@@ -108,7 +110,6 @@ public class Checkpoints implements Serializable {
 		}else if(type == CheckpointType.HC) {
 			Collections.addAll(listOfPoints, 20,15,12,10,8,6,4,2);
 		} 
-		// if not a moutain pass by 
 		int[] returnArray = new int[size];
 		for (int i = 0;  i < size; i++) {
 			if(i <listOfPoints.size()){

@@ -3,8 +3,12 @@ package cycling;
 import java.util.ArrayList;
 import java.io.Serializable;
 
+/**
+ * Races stores the information relevent to a given race
+ * @author Amy Lewis and Annabelle Ronald
+ * @version 1.0
+ */
 public class Races implements Serializable {
-	// 4 attributes
 	private int raceID;
 	private String name;
 	private String description;
@@ -20,7 +24,6 @@ public class Races implements Serializable {
 	 * @param description	Description of the race
 	 */
 	public Races(int id, String name, String description) {
-		// throw new throws IllegalNameException, InvalidNameException
 		this.raceID = id;
         this.name = name;
 		this.description = description;

@@ -7,7 +7,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.io.Serializable;
 
-
+/**
+ * stages stores the information relevent to stages
+ * @author Amy Lewis and Annabelle Ronald
+ * @version 1.0
+ */
 public class Stages implements Serializable {
 	private int stageID ;
 	private int raceID;
@@ -140,8 +144,6 @@ public class Stages implements Serializable {
 	 */
 	public int getResultsSize(){
 		return results.size();
-		// id not by checkpoint by rider ids
-		// need to get a list of the checkpoints time in the right order
 	}
 
 	/**
@@ -190,7 +192,6 @@ public class Stages implements Serializable {
 	 * @throws IDNotRecognisedException		If the Rider has no registered results in the stage
 	 */
 	public LocalTime[] getRiderTimes(int riderID) throws IDNotRecognisedException{
-		//for the array or rider times find the RiderID that 
 		LocalTime[] ridertimes = new LocalTime[]{};
 		try{
 			ridertimes = this.results.get(riderID);
@@ -272,9 +273,7 @@ public class Stages implements Serializable {
 	 * <p> This should not be called if no results are registered or on time trials
 	 */
 	public void calculateAdjustment(){
-		// =====
 		// Get times from results
-		// =====
 		ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
 		HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
 		
@@ -284,14 +283,10 @@ public class Stages implements Serializable {
 			timeRiderDict.put(theirTime, id);
 		}
 
-		// =====
 		// Sort the times
-		// =====
 		Collections.sort(riderTimes);
 		if(type != StageType.TT){
-			// =====
 			//Group times into peletons
-			// =====
 			ArrayList<Integer> groupList = new ArrayList<>(); //Assigns the times into peletons if necessary
 			//In form: {1,1,1,0,0,4,4} where non-zero indicate being members of the specified group
 
@@ -299,7 +294,7 @@ public class Stages implements Serializable {
 			for (int i = 0; i < riderTimes.size()-1; i++) {
 				LocalTime next = riderTimes.get(i+1); //Next time in list
 				LocalTime current = riderTimes.get(i); //This time in list
-				if((current.until(next, ChronoUnit.MILLIS)) < 1000){ //Difference between is less than one
+				if((current.until(next, ChronoUnit.MILLIS)) < 1000){ //Difference between is less than one second
 					groupList.add(groupCount);
 				} else{
 					groupList.add(0);
@@ -307,9 +302,7 @@ public class Stages implements Serializable {
 				}
 			}
 
-			// =====
 			// Create a new hashmap of all the values with their ids
-			// =====
 			adjustedResults.clear();
 			//First Value will always be unchanged
 			adjustedResults.put(timeRiderDict.get(riderTimes.get(0)), riderTimes.get(0));
@@ -368,16 +361,14 @@ public class Stages implements Serializable {
 	 * hash map that you can access. 
 	 */
 	public void calulateRankedCheckpoint(){
-		//have a list of checkpoints for rider id 
-		// create a list of times for each checkpoint and sort that pass in the scores and add them to rider ID totals 
-		// calculate riders order for each checkpoint and sum them up
+		// get the checkpoint times for each checkpoint and sort them in the scores and add them to rider ID totals 
+		// calculate riders order for each checkpoint
 		int count = 0;
 		LocalTime[] times;
 		int[] orderedIDs;
-		ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
-		HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
+		ArrayList<LocalTime> riderTimes = new ArrayList<>(); 
+		HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); 
 		// for the times in the stage get rank for each time then allocate points based on the time from that rank 
-		// gives all the rider IDS sorted by time for each checkpoint 
 			for(int i=1; i< checkpoints.size() +1; i++){
 				timeRiderDict.clear();
 				riderTimes.clear();
@@ -388,6 +379,7 @@ public class Stages implements Serializable {
 					timeRiderDict.put(theirTime, riderID);
 			}
 			Collections.sort(riderTimes);
+			// gives all the rider IDS sorted by time for each checkpoint 
 			orderedIDs = new int[riderTimes.size()];
 			count = 0;
 			for(LocalTime time : riderTimes){
@@ -399,6 +391,7 @@ public class Stages implements Serializable {
 	}
 	
 	/**
+	 * 
 	 * gets the checkpoint rank from the hashmap based on its checkpoint ID
 	 * @param checkpointID	Checkpoint ID whose time is being retrived
 	 * @return	the ranks for a given checkpoint		

@@ -532,8 +532,12 @@ public class CyclingPortalImpl implements CyclingPortal {
 				if (!(stage.getStageState().equals("waiting for results"))){
 					throw new InvalidStageStateException();
 				} else {
-		// if rider times is not empty execption else add the times 
-					stage.setResults(riderId, checkpoints);
+					try {
+						stage.setResults(riderId, checkpoints);
+					} catch (DuplicatedResultException e) {
+						throw new DuplicatedResultException();
+					}
+					
 				}
 			}
 		}
@@ -676,16 +680,13 @@ public class CyclingPortalImpl implements CyclingPortal {
 									}else{
 										current = pointsInStage.get(returnArray[j]);
 									}	
+									// match the points to the iDS each time and record the id and add points each time for that iD
 									pointsInStage.put(returnArray[j],current + pointArray[j]);
-									
-								
+								}	
 							}	
-						}	
+						}
 					}
-					}		
-							// match the points to the iDS each time and record the id and
-						// add points each time for that iD 
-				}
+				} 
 				finished = new int[rank.length];
 				int count = 0;
 				for (int id : rank) {
@@ -709,8 +710,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 		listOfStages.clear();
 		listOfTeams.clear();
 		listOfCheckpoints.clear();
-		// creating a stream and write all the information to a file 
-
 	}
 
 	@Override
@@ -810,7 +809,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int[] getRidersPointsInRace(int raceId) throws IDNotRecognisedException {
-		// gives empty array !
 		int current = 0;
 		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
 		int[] finished;
@@ -857,7 +855,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int[] getRidersMountainPointsInRace(int raceId) throws IDNotRecognisedException {
-		// gives empty array !
 		int current = 0;
 		HashMap<Integer, Integer> pointsInStage = new HashMap<>();
 		int[] finished;
@@ -904,10 +901,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 
 	@Override
 	public int[] getRidersGeneralClassificationRank(int raceId) throws IDNotRecognisedException {
-		//For all in race
-		//can get each stage from getAdjustedRank (to give times)
-		// and getRank to get IDs
-		//Add all together here
 		totalRiderTimes.clear();
 		for (Races race : listOfRaces) {
 			if (raceId == race.getRaceID() ){
@@ -965,7 +958,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 	
 	@Override
 	public int[] getRidersPointClassificationRank(int raceId) throws IDNotRecognisedException {
-		// gives empty array 
 		for(Races race : listOfRaces){
 			if(race.getRaceID() == raceId){
 				int[] points;
@@ -1008,7 +1000,6 @@ public class CyclingPortalImpl implements CyclingPortal {
 	
 	@Override
 	public int[] getRidersMountainPointClassificationRank(int raceId) throws IDNotRecognisedException {
-		// gives empty array for riders point classification
 		for(Races race : listOfRaces){
 			if(race.getRaceID() == raceId){
 				int[] points = getRidersMountainPointsInRace(raceId);

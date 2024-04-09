@@ -3,9 +3,10 @@ import java.io.Serializable;
 
 
 /**
- * Rider Class
+ * Riders stores the information relevent to a given rider
+ * @author Amy Lewis and Annabelle Ronald
+ * @version 1.0
  */
-
 public class Riders implements Serializable{
     private int riderID;
     private int yearOfBirth;

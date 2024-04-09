@@ -3,7 +3,9 @@ import java.util.ArrayList;
 import java.io.Serializable;
 
 /**
- * Team Class
+ * Teams stores the information relevent to a given team
+ * @author Amy Lewis and Annabelle Ronald
+ * @version 1.0
  */
 
 public class Teams implements Serializable{
