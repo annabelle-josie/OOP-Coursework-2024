@@ -9,7 +9,8 @@ import java.io.Serializable;
 public class Teams implements Serializable{
     private int teamID;
     private ArrayList<Integer> riders = new ArrayList<>();
-    private String name, description;
+    private String name;
+    private String description;
 
     /**
      * Creates a new team
@@ -60,7 +61,7 @@ public class Teams implements Serializable{
      * @throws IDNotRecognisedException     If the ID given does not correspond to a rider in the team
      */
     public void removeRider(int riderID ) throws IDNotRecognisedException {
-		Boolean worked = riders.remove((Integer)riderID);
+		boolean worked = riders.remove((Integer)riderID);
 		if (!worked){
 			throw new IDNotRecognisedException();
 		}

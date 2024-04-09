@@ -1,35 +1,27 @@
 package cycling;
 
 import java.util.ArrayList;
-//import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.io.Serializable;
-import java.time.LocalTime;
 
 public class Races implements Serializable {
 	// 4 attributes
-	private int raceID ;
+	private int raceID;
 	private String name;
 	private String description;
-	private ArrayList<Integer> stages = new ArrayList<Integer>();
+	private ArrayList<Integer> stages = new ArrayList<>();
 	private Double length;
 	
 
 
 	/**
 	 * Creates new race
-	 * @param ID			ID of the race
+	 * @param id			ID of the race
 	 * @param name			Name of the race
 	 * @param description	Description of the race
 	 */
-	public Races(int ID, String name, String description) {
+	public Races(int id, String name, String description) {
 		// throw new throws IllegalNameException, InvalidNameException
-		this.raceID = ID;
+		this.raceID = id;
         this.name = name;
 		this.description = description;
 		this.length = 0.0d;
@@ -50,7 +42,7 @@ public class Races implements Serializable {
 	 * @throws IDNotRecognisedException	If there is no stage matching that ID in the race
 	 */
 	public void removeStage(int stageId) throws IDNotRecognisedException {
-		Boolean worked = stages.remove((Integer)stageId);
+		boolean worked = stages.remove((Integer)stageId);
 		if (!worked){
 			throw new IDNotRecognisedException();
 		}
@@ -119,7 +111,7 @@ public class Races implements Serializable {
 	/**
 	 * @return A string of the important details of the race for use in debugging
 	 */
-	public String raceasstring(){
+	public String raceAsString(){
 		String s;
 		if(stages == null){
 			s = ("races of ID " + raceID + " " + " "+ name + " " + description + " " +length);

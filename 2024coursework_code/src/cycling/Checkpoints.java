@@ -1,23 +1,18 @@
 package cycling;
 import java.util.ArrayList;
-//import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.io.Serializable;
-import java.time.LocalTime;
 
 public class Checkpoints implements Serializable {
 	private int checkpointID;
-	private int stageID ;
+	private int stageID;
 	private Double location;
 	private CheckpointType type;
 	private Double averageGradient;
 	private Double length;
-	ArrayList<Integer> currentCheckpoints = new ArrayList<Integer>();
 
 	/**
-	 * Creates a new checkpoint
-	 * TODO: is this specific to mountain ones? I feel like it is...
+	 * Creates a new checkpoint for Mountain Checkpoints, adding mountain specific attributes
 	 * @param id				ID of the checkpoint to be added
 	 * @param stageId			ID of the stage the checkpoint belongs to
 	 * @param location			The location of the checkpoint
@@ -35,16 +30,18 @@ public class Checkpoints implements Serializable {
 	}
 
 	/**
-	 * Alternate constructor for more limited information
+	 * Checkpoint constructor for sprints or 
 	 * @param id			ID of the checkpoint
 	 * @param stageId		ID of the stage the checkpoint belongs to
 	 * @param location		The location of the checkpoint
+	 * @param type			The type of checkpoint
 	 */
-	public Checkpoints(int id, int stageId, Double location) {
+	public Checkpoints(int id, int stageId, Double location, CheckpointType type) {
 		this.checkpointID = id;
 		this.stageID = stageId;
         this.location = location;
 		this.length = 0.0d;
+		this.type = type;
 	}
 
 	/**
@@ -89,37 +86,16 @@ public class Checkpoints implements Serializable {
 	public Double getLocation() {
 		return location;
 	}
-	// public int[] getCheckpointRank(HashMap<Integer, LocalTime[]> results){
-	// 	// get each time for that stage for the stage results 
-	// 	ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted
-	// 	HashMap<LocalTime, Integer> timeRiderDict = new HashMap<>(); //Dictionary matching times to IDs
-		
-	// 	for (Integer id : results.keySet()) {
-	// 		// to change 
-	// 		//LocalTime theirTime = (id);
-	// 		riderTimes.add(theirTime);
-	// 		timeRiderDict.put(theirTime, id);
-	// 	}
-	// 	Collections.sort(riderTimes);
-	// 	int[] orderedIDs = new int[riderTimes.size()];
-	// 	int count = 0;
-	// 	for(LocalTime time : riderTimes){
-	// 		orderedIDs[count] = timeRiderDict.get(time);
-	// 		count++;
-	// 	}
-	// 	return orderedIDs;
-	// }
 
 	/**
-	 * TODO: Amy help please write this doc! I don't know what it does
+	 * calculates the list of mountain points using the amount of riders that passed it
 	 * @param size
-	 * @return
+	 * @return list of the mountain points achieved for that checkpoint
 	 */
 	public int[] getMountainPoints(int size){
 		// this works if they are in the right order to give riders the right order 
 		// attribute these to riders and sum them 
-		//LocalTime[] checkpointTimes){
-		ArrayList<Integer> listOfPoints = new ArrayList<Integer>();
+		ArrayList<Integer> listOfPoints = new ArrayList<>();
 		// use rank in stage to get the order of rider in stage
 		if(type == CheckpointType.C1){
 			Collections.addAll(listOfPoints, 1);
@@ -136,13 +112,27 @@ public class Checkpoints implements Serializable {
 		int[] returnArray = new int[size];
 		for (int i = 0;  i < size; i++) {
 			if(i <listOfPoints.size()){
-				//System.out.println("yoo");
-				//System.out.println(listOfPoints);
-				//System.out.println("length " + returnArray.length);
-				//System.out.println(Arrays.toString(returnArray));
 				returnArray[i] = listOfPoints.get(i);
 			}else{
-				//System.out.println("no");
+				returnArray[i] = 0;
+			}
+		}
+		return returnArray;
+	}
+
+/**
+	 * calculates the list of intermidiate sprint points using the amount of riders that passed it
+	 * @param size
+	 * @return list of the intermidiate sprint points achieved for that checkpoint
+	 */
+	public int[] addIntermidiatePoints(int size ){
+		int[] returnArray = new int[size];
+			ArrayList<Integer> listOfPoints = new ArrayList<>();
+			Collections.addAll(listOfPoints, 20,17,15,13,11,10,9,8,7,6,5,4,3,2,1);
+			for (int i = 0;  i < size; i++) {
+			if(i <listOfPoints.size()){
+				returnArray[i] = listOfPoints.get(i);
+			}else{
 				returnArray[i] = 0;
 			}
 		}

@@ -1,5 +1,4 @@
 package cycling;
-import java.util.ArrayList;
 import java.io.Serializable;
 
 
@@ -11,7 +10,6 @@ public class Riders implements Serializable{
     private int riderID;
     private int yearOfBirth;
     private String name;
-    private static ArrayList<Integer> currentRiders = new ArrayList<Integer>();
 
     /**
      * Creates a new rider
@@ -21,7 +19,6 @@ public class Riders implements Serializable{
      */
     public Riders(int id, String name, int yearOfBirth){
         this.riderID = id;
-        currentRiders.add(riderID);
         this.name = name;
         this.yearOfBirth = yearOfBirth;
     }
