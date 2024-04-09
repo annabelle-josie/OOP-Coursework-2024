@@ -65,12 +65,12 @@ public class Stages implements Serializable {
 			}
 	}
 	/**
-	 * Removes rider from the stage
+	 * Removes rider from the stage along with all their results
 	 * @param riderID						ID of the rider to be removed
 	 * @throws IDNotRecognisedException		If the rider of that ID is not found listed in the stage (so cannot be removed)
 	 */
 	public void removeRider(int riderID) throws IDNotRecognisedException {
-		boolean found =false;
+		boolean found = false;
 		for (Integer i : results.keySet()) {
 	 		if (i == riderID){
 				found = true;
@@ -94,14 +94,6 @@ public class Stages implements Serializable {
 	 */
 	public String getStageState(){
 		return stageState;
-	}
-	
-	/**
-	 * @return Race ID of the race the stage belongs to
-	 * TODO: is this used?
-	 */
-	public int getRaceID() {
-		return raceID;
 	}
 
 	/**
@@ -402,6 +394,7 @@ public class Stages implements Serializable {
 		// create a list of times for each checkpoint and sort that pass in the scores and add them to rider ID totals 
 		// calculate riders order for each checkpoint and sum them up
 		LocalTime[] times= new LocalTime[]{};
+		System.out.println("are you getting this far " + stageID);
 		int count = 0;
 		int[] orderedIDs = new int[]{}; 
 		ArrayList<LocalTime> riderTimes = new ArrayList<>(); //Array that can be sorted

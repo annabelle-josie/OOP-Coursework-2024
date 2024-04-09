@@ -57,8 +57,7 @@ public class Races implements Serializable {
 	}
 
 	/**
-	 * Updates total length of the race, used when stages are added
-	 * TODO: Add a way of reducing length
+	 * Updates total length of the race, used when stages are added and removed
 	 * @param length	Length to be added to the total length
 	 */
 	public void setLength(double length){
